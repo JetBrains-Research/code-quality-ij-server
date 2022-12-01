@@ -1,4 +1,6 @@
 rootProject.name = "IJHeadlessTemplate"
-include("ij-starter")
 
 enableFeaturePreview("VERSION_CATALOGS")
+
+include("ij-starter")
+include("ij-core")

@@ -3,6 +3,7 @@ version = rootProject.version
 
 dependencies {
     implementation(rootProject.libs.kotlin.argparser)
+    implementation(project(":ij-core"))
 }
 
 tasks {
