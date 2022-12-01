@@ -15,23 +15,21 @@ class PythonGreetingCodeAnalyzer {
     private val log = Logger.getLogger(javaClass.name)
 
     fun run(greeting: String) {
-        ApplicationManager.getApplication().invokeAndWait {
-            val project = ProjectUtil.openOrImport(Path.of("."))
-            val factory = PsiFileFactory.getInstance(project)
-            val code = "print(\'$greeting\')"
-            val file = factory.createFileFromText("greeting", PythonLanguage.INSTANCE, code)
+        val project = ProjectUtil.openOrImport(Path.of("."))
+        val factory = PsiFileFactory.getInstance(project)
+        val code = "print(\'$greeting\')"
+        val file = factory.createFileFromText("greeting", PythonLanguage.INSTANCE, code)
 
-            log.info("Analysing code: $code")
-            file.accept(
-                object : PsiRecursiveElementVisitor() {
-                    override fun visitElement(element: PsiElement) {
-                        (element as? PyStringLiteralExpression)?.let {
-                            log.info("PyStringLiteralExpression: ${element.stringValue}")
-                        }
-                        super.visitElement(element)
+        log.info("Analysing code: $code")
+        file.accept(
+            object : PsiRecursiveElementVisitor() {
+                override fun visitElement(element: PsiElement) {
+                    (element as? PyStringLiteralExpression)?.let {
+                        log.info("PyStringLiteralExpression: ${element.stringValue}")
                     }
+                    super.visitElement(element)
                 }
-            )
-        }
+            }
+        )
     }
 }
