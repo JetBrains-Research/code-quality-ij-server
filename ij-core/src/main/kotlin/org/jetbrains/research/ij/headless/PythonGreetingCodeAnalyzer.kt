@@ -1,7 +1,6 @@
 package org.jetbrains.research.ij.headless
 
 import com.intellij.ide.impl.ProjectUtil
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiRecursiveElementVisitor
