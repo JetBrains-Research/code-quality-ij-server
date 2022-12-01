@@ -1,0 +1,19 @@
+[versions]
+kotlin = "1.7.21"
+dokka = "1.7.20"
+ktlint = "11.0.0"
+intellij = "1.10.0"
+log4j = "2.19.0"
+kotlin-argparser = "2.0.7"
+
+[libraries]
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-slf4j-impl = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
+kotlin-argparser = { module = "com.xenomachina:kotlin-argparser", version.ref = "kotlin-argparser" }
+
+[plugins]
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+jetbrains-intellij = { id = "org.jetbrains.intellij", version.ref = "intellij" }
