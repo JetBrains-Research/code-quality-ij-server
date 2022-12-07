@@ -1,15 +1,15 @@
-package org.jetbrains.research.ij.headless
+package org.jetbrains.research.ij.headless.server
 
 import com.intellij.openapi.application.ApplicationStarter
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.default
 import java.util.logging.Logger
 
-class IJGreetingApplicationStarter : ApplicationStarter {
+class IJCodeServerStarter : ApplicationStarter {
 
     private val log = Logger.getLogger(javaClass.name)
     override fun getCommandName(): String {
-        return "ij-headless-greeting"
+        return "ij-code-server"
     }
 
     /** Sets main (start) thread for IDE in headless as not edt. */
@@ -20,15 +20,18 @@ class IJGreetingApplicationStarter : ApplicationStarter {
     override fun main(args: List<String>) {
         val parser = ArgParser(args.drop(1).toTypedArray())
 
-        val greeting by parser.storing(
-            "-m",
-            "--message",
-            help = "IJ Headless greeting message"
-        ).default("Hello from IJ Headless")
+        val port by parser.storing(
+            "--port",
+            help = "IJ Code Server port"
+        ) { toInt() }.default(8080)
 
-        val analyzer = PythonGreetingCodeAnalyzer()
-        log.info(greeting)
+        val host by parser.storing(
+            "--host",
+            help = "IJ Code Server host"
+        ).default("127.0.00.1")
 
-        analyzer.run(greeting)
+        log.info("Starting IJ Code Server on port=$port host=$host")
+        val server = IJServer(port, host)
+        server.run()
     }
 }

@@ -1,4 +1,4 @@
-group = "org.jetbrains.research.ij.headless"
+group = "org.jetbrains.research.ij.headless.server"
 version = "1.0-SNAPSHOT"
 
 @Suppress("DSL_SCOPE_VIOLATION") // "libs" produces a false-positive warning, see https://youtrack.jetbrains.com/issue/KTIJ-19369
@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.gradle.ktlint)
     alias(libs.plugins.jetbrains.intellij)
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.ktor) apply false
+    alias(libs.plugins.protobuf) apply false
 }
 
 val platformVersion: String by project

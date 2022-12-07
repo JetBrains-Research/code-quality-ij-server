@@ -3,19 +3,22 @@ version = rootProject.version
 
 dependencies {
     implementation(rootProject.libs.kotlin.argparser)
-    implementation(project(":ij-core"))
+    implementation(project(":ij-server"))
 }
 
 tasks {
     runIde {
-        // Define args for your application
-        val message: String? by project
+        // Server port
+        val port: Int? by project
+        // Server port
+        val host: String? by project
 
         args = listOfNotNull(
             // Define your application starter command name
-            "ij-headless-greeting",
+            "ij-code-server",
             // Define args for your application
-            message?.let { "--message=$it" }
+            port?.let { "--port=$it" },
+            host?.let { "--host=$it" }
         )
 
         jvmArgs = listOf(
