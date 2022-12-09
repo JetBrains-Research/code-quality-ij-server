@@ -8,10 +8,10 @@ kotlin-argparser = "2.0.7"
 kotlinx-serialization-json = "1.4.1"
 kotlinx-coroutines = "1.7.21"
 ktor = "2.1.3"
-gson = "2.10"
-protoc = "3.13.0"
+gson = "2.1"
 grpc = "1.31.1"
-protobuf = "0.8.13"
+protobuf = "3.6.1"
+protobuf-plugin = "0.8.13"
 
 [libraries]
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
@@ -26,11 +26,12 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protoc" }
-grps-protoc = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
-grps-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
-grps-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
-grps-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
+grpc-protoc = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
@@ -39,4 +40,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 jetbrains-intellij = { id = "org.jetbrains.intellij", version.ref = "intellij" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
-protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }

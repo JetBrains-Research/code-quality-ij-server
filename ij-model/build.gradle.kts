@@ -1,3 +1,5 @@
+import com.google.protobuf.gradle.*
+
 group = rootProject.group
 version = rootProject.version
 
@@ -5,28 +7,27 @@ apply {
     plugin(libs.plugins.protobuf.get().pluginId)
 }
 
-protobuf {
-    protoc {artifact = "com.google.protobuf:protoc:3.13.0"}
-    plugins{
-        grpc {artifact = "io.grpc:protoc-gen-grpc-java:1.31.1"}
-    }
-    generateProtoTasks{
-        all()*.plugins {grpc {}}
-    }
-    // default proto plugin generate stub in build folder
-    // change the stub generate folder
-    //generatedFilesBaseDir = "$projectDir/src/generated"
+dependencies {
+    implementation(libs.protobuf.java)
+    implementation(libs.grpc.stub)
+    implementation(libs.grpc.protobuf)
+    implementation(libs.grpc.netty)
 }
 
-sourceSets{
-    main{
-        proto{
-            srcDirs 'src/main/proto'
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString() + ":osx-x86_64"
+    }
+    plugins {
+        id("grpc") {
+            artifact = libs.grpc.protoc.get().toString() + ":osx-x86_64"
         }
-        java{
-            srcDirs 'build/generated/source/proto/main/grpc'
-            srcDirs 'build/generated/source/proto/main/kotlin'
-
+    }
+    generateProtoTasks {
+        ofSourceSet("main").forEach {
+            it.plugins {
+                id("grpc") { }
+            }
         }
     }
 }
