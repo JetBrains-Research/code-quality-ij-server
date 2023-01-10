@@ -11,8 +11,8 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiFile
 import java.util.logging.Logger
 
-/** @InspectionsService provides opportunity to invoke IDE code quality inspections on given file. */
-class InspectionService {
+/** @IJCodeInspector provides opportunity to invoke IDE code quality inspections on given file. */
+object IJCodeInspector {
 
     private val log = Logger.getLogger(javaClass.name)
 

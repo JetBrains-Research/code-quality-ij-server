@@ -57,6 +57,7 @@ allprojects {
             targetCompatibility = "11"
         }
         withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
             kotlinOptions.jvmTarget = "11"
         }
         withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask>()

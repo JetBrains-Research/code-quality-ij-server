@@ -25,13 +25,9 @@ class IJCodeServerStarter : ApplicationStarter {
             help = "IJ Code Server port"
         ) { toInt() }.default(8080)
 
-        val host by parser.storing(
-            "--host",
-            help = "IJ Code Server host"
-        ).default("127.0.00.1")
-
-        log.info("Starting IJ Code Server on port=$port host=$host")
-        val server = IJServer(port, host)
-        server.run()
+        log.info("Starting IJ Code Server on port=$port")
+        val server = IJCodeServer(port)
+//        server.start()
+//        server.blockUntilShutdown()
     }
 }

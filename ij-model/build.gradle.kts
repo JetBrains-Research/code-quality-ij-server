@@ -16,11 +16,11 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = libs.protobuf.protoc.get().toString() + ":osx-x86_64"
+        artifact = libs.protobuf.protoc.get().toString() // + ":osx-x86_64"
     }
     plugins {
         id("grpc") {
-            artifact = libs.grpc.protoc.get().toString() + ":osx-x86_64"
+            artifact = libs.grpc.protoc.get().toString() // + ":osx-x86_64"
         }
     }
     generateProtoTasks {

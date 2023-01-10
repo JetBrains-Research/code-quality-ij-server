@@ -10,15 +10,12 @@ tasks {
     runIde {
         // Server port
         val port: Int? by project
-        // Server port
-        val host: String? by project
 
         args = listOfNotNull(
             // Define your application starter command name
             "ij-code-server",
             // Define args for your application
             port?.let { "--port=$it" },
-            host?.let { "--host=$it" }
         )
 
         jvmArgs = listOf(
