@@ -1,27 +1,26 @@
-import socket
-import json
+import sys
+
+import model_pb2 as model_pb2
+import model_pb2_grpc as model_pb2_grpc
+
+import grpc
 
 if __name__ == '__main__':
-    HOST, PORT = "localhost", 8080
-    code = {"text": "println(123)", "languageId": "Python"} # a real dict.
-    data = json.dumps(code)
+    code = model_pb2.Code()
 
-    # Create a socket (SOCK_STREAM means a TCP socket)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    code.text = "print(1, 2, 3)"
+    code.languageId = model_pb2.LanguageId.Python
+
+    print(code.SerializeToString())
+
+    channel = grpc.insecure_channel('localhost:1234')
 
     try:
-        # Connect to server and send data
-        sock.connect((HOST, PORT))
-        sock.sendall(bytes(len(data)))
-        sock.sendall(bytes(data, encoding="utf-8"))
+        grpc.channel_ready_future(channel).result(timeout=10)
+    except grpc.FutureTimeoutError:
+        sys.exit('Error connecting to server')
+    else:
+        stub = model_pb2_grpc.CodeInspectionServiceStub(channel)
 
-
-        # # Receive data from the server and shut down
-        # received = sock.recv(1024)
-        # received = received.decode("utf-8")
-
-    finally:
-        sock.close()
-
-    print("Sent:     {}".format(data))
-    # print("Received: {}".format(received))
+    result = stub.inspect(code)
+    print(result)

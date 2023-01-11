@@ -9,9 +9,9 @@ kotlinx-serialization-json = "1.4.1"
 kotlinx-coroutines = "1.7.21"
 ktor = "2.1.3"
 gson = "2.1"
-grpc = "1.50.2"
-grpc-kotlin = "1.3.0"
-protobuf = "3.21.8"
+grpc = "1.31.1"
+grpc-kotlin = "0.2.0"
+protobuf = "3.19.4"
 protobuf-plugin = "0.8.13"
 
 [libraries]
@@ -34,7 +34,7 @@ grpc-protoc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = 
 grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 grpc-stub-kotlin = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin"}
-grpc-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
+grpc-netty = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

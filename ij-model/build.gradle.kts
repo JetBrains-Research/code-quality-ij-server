@@ -28,7 +28,7 @@ protobuf {
             artifact = libs.grpc.protoc.java.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
         }
         create("grpckt") {
-            artifact = libs.grpc.protoc.kotlin.get().toString() + ":jdk8@jar"
+            artifact = libs.grpc.protoc.kotlin.get().toString() + ":jdk7@jar"
         }
     }
     generateProtoTasks {
