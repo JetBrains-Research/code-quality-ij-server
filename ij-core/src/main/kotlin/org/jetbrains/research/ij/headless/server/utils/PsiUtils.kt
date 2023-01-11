@@ -20,7 +20,6 @@ object PsiUtils {
         PsiDocumentManager.getInstance(psiFile.project).commitDocument(document)
     }
 
-
     fun createPsiFile(project: Project, fileName: String, language: Language, text: String = ""): PsiFile {
         return PsiFileFactory.getInstance(project).createFileFromText(fileName, language, text)
             ?: error("Can not create file $fileName")
@@ -28,5 +27,6 @@ object PsiUtils {
 
     fun createProject(path: Path = Path.of(".")): Project {
         return ProjectUtil.openOrImport(path)
+            ?: error("Can not create project $path")
     }
 }

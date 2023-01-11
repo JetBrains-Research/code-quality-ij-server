@@ -15,7 +15,7 @@ tasks {
             // Define your application starter command name
             "ij-code-server",
             // Define args for your application
-            port?.let { "--port=$it" },
+            port?.let { "--port=$it" }
         )
 
         jvmArgs = listOf(
@@ -26,8 +26,5 @@ tasks {
         )
 
         maxHeapSize = "32g"
-
-        standardInput = System.`in`
-        standardOutput = System.`out`
     }
 }

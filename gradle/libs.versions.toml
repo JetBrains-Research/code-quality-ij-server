@@ -9,8 +9,9 @@ kotlinx-serialization-json = "1.4.1"
 kotlinx-coroutines = "1.7.21"
 ktor = "2.1.3"
 gson = "2.1"
-grpc = "1.31.1"
-protobuf = "3.6.1"
+grpc = "1.50.2"
+grpc-kotlin = "1.3.0"
+protobuf = "3.21.8"
 protobuf-plugin = "0.8.13"
 
 [libraries]
@@ -28,9 +29,11 @@ ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
-grpc-protoc = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
+grpc-protoc-java = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
+grpc-protoc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = "grpc-kotlin" }
 grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-stub-kotlin = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin"}
 grpc-netty = { module = "io.grpc:grpc-netty", version.ref = "grpc" }
 
 [plugins]

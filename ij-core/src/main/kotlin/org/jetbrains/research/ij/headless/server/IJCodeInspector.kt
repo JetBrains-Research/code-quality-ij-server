@@ -7,14 +7,14 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiFile
-import java.util.logging.Logger
 
 /** @IJCodeInspector provides opportunity to invoke IDE code quality inspections on given file. */
 object IJCodeInspector {
 
-    private val log = Logger.getLogger(javaClass.name)
+    private val logger = Logger.getInstance(javaClass)
 
     private fun getInspections(language: Language) =
         LocalInspectionEP.LOCAL_INSPECTION.extensions.filter { it.language == language.id }
@@ -34,7 +34,7 @@ object IJCodeInspector {
 
     /** Runs language inspections on given code snippet and returns detected problems. */
     fun inspect(psiFile: PsiFile): Map<LocalInspectionTool, List<ProblemDescriptor>> {
-        log.info("Running code inspections...")
+        logger.info("Running code inspections...")
         ApplicationManager.getApplication().assertIsDispatchThread()
 
         return getInspections(psiFile.language).associateWith { inspectSingle(psiFile, it) }
