@@ -1,4 +1,6 @@
+import argparse
 import sys
+from pathlib import Path
 
 import model_pb2 as model_pb2
 import model_pb2_grpc as model_pb2_grpc
@@ -27,10 +29,15 @@ class IJClient(object):
 
 
 if __name__ == '__main__':
-    code = model_pb2.Code()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('code_path', type=lambda value: Path(value).absolute(), help='Path to file with code sample.')
+    args = parser.parse_args()
 
-    code.text = "print(1, 2, 3)"
+    code = model_pb2.Code()
     code.languageId = model_pb2.LanguageId.Python
+    with open(args.code_path) as f:
+        code_sample = f.read()
+        code.text = code_sample
 
     client = IJClient()
     inspection_result = client.inspect(code)
