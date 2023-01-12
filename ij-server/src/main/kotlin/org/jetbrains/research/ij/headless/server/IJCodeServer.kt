@@ -15,9 +15,9 @@ class IJCodeServer(private val port: Int) {
         logger.info("Server started, listening on $port")
         Runtime.getRuntime().addShutdownHook(
             Thread {
-                logger.info("*** shutting down gRPC server since JVM is shutting down")
+                logger.info("Shutting down gRPC server since JVM is shutting down")
                 stop()
-                logger.info("*** server shut down")
+                logger.info("Server shut down")
             }
         )
     }
