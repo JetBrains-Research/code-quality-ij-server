@@ -5,14 +5,17 @@ import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiFile
-import org.jetbrains.research.ij.headless.server.utils.PsiUtils
+import com.jetbrains.python.PythonLanguage
+import org.jetbrains.research.ij.headless.server.utils.createProject
+import org.jetbrains.research.ij.headless.server.utils.createPsiFile
+import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
 import java.util.concurrent.atomic.AtomicReference
 
 class IJCodeInspectionService : CodeInspectionServiceGrpcKt.CodeInspectionServiceCoroutineImplBase() {
 
     private val logger = Logger.getInstance(javaClass)
 
-    private val project = PsiUtils.createProject()
+    private val project = createProject(PythonLanguage.INSTANCE) ?: error("Can not create project!")
     private val dummyPsiFiles = mutableMapOf<Language, PsiFile>()
 
     override suspend fun inspect(request: Code): InspectionResult {
@@ -26,24 +29,26 @@ class IJCodeInspectionService : CodeInspectionServiceGrpcKt.CodeInspectionServic
         val response = AtomicReference<InspectionResult>()
         ApplicationManager.getApplication().invokeAndWait {
             val result = IJCodeInspector.inspect(file)
-            response.set(InspectionResult.newBuilder().addAllProblems(
-                result.flatMap { (inspection, descriptors) ->
-                    descriptors.map { descriptor ->
-                        Problem.newBuilder()
-                            .setName(
-                                ProblemDescriptorUtil.renderDescriptionMessage(
-                                    descriptor,
-                                    descriptor.psiElement
+            response.set(
+                InspectionResult.newBuilder().addAllProblems(
+                    result.flatMap { (inspection, descriptors) ->
+                        descriptors.map { descriptor ->
+                            Problem.newBuilder()
+                                .setName(
+                                    ProblemDescriptorUtil.renderDescriptionMessage(
+                                        descriptor,
+                                        descriptor.psiElement
+                                    )
                                 )
-                            )
-                            .setInspector(inspection.shortName)
-                            .setLineNumber(descriptor.lineNumber.toLong())
-                            .setOffset(descriptor.psiElement?.textOffset?.toLong() ?: -1L)
-                            .setLength(descriptor.psiElement?.textLength?.toLong() ?: -1L)
-                            .build()
+                                .setInspector(inspection.shortName)
+                                .setLineNumber(descriptor.lineNumber.toLong())
+                                .setOffset(descriptor.psiElement?.textOffset?.toLong() ?: -1L)
+                                .setLength(descriptor.psiElement?.textLength?.toLong() ?: -1L)
+                                .build()
+                        }
                     }
-                }
-            ).build())
+                ).build()
+            )
         }
 
         return response.get()
@@ -57,8 +62,8 @@ class IJCodeInspectionService : CodeInspectionServiceGrpcKt.CodeInspectionServic
 
             val file = AtomicReference<PsiFile>()
             ApplicationManager.getApplication().invokeAndWait {
-                val psiFile = PsiUtils.createPsiFile(project, "${language.id}_dummy", language, "")
-                PsiUtils.updatePsiFileContent(psiFile, text)
+                val psiFile = createPsiFile(project, "${language.id}_dummy", language, "")
+                updatePsiFileContent(psiFile, text)
                 file.set(psiFile)
             }
 
