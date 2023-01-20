@@ -9,13 +9,14 @@ import com.jetbrains.python.PythonLanguage
 import org.jetbrains.research.ij.headless.server.utils.createProject
 import org.jetbrains.research.ij.headless.server.utils.createPsiFile
 import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
-class IJCodeInspectionService : CodeInspectionServiceGrpcKt.CodeInspectionServiceCoroutineImplBase() {
+class IJCodeInspectionService(templatesPath: Path) : CodeInspectionServiceGrpcKt.CodeInspectionServiceCoroutineImplBase() {
 
     private val logger = Logger.getInstance(javaClass)
 
-    private val project = createProject(PythonLanguage.INSTANCE) ?: error("Can not create project!")
+    private val project = createProject(PythonLanguage.INSTANCE, templatesPath) ?: error("Can not create project!")
     private val dummyPsiFiles = mutableMapOf<Language, PsiFile>()
 
     override suspend fun inspect(request: Code): InspectionResult {
