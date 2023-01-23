@@ -2,20 +2,25 @@ group = rootProject.group
 version = rootProject.version
 
 dependencies {
+    implementation(rootProject.libs.kotlinx.serialization.json)
     implementation(rootProject.libs.kotlin.argparser)
     implementation(project(":ij-server"))
 }
 
+apply {
+    plugin(libs.plugins.kotlin.serialization.get().pluginId)
+}
+
 tasks {
     runIde {
-        // Server port
-        val port: Int? by project
+        // Server config
+        val config: String? by project
 
         args = listOfNotNull(
             // Define your application starter command name
             "ij-code-server",
             // Define args for your application
-            port?.let { "--port=$it" }
+            config?.let { "--config=$it" }
         )
 
         jvmArgs = listOf(

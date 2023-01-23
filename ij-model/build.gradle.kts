@@ -17,7 +17,6 @@ dependencies {
 
 val protocPlatform: String? by project
 
-
 protobuf {
     protoc {
         // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties

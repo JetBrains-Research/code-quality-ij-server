@@ -9,7 +9,7 @@ import grpc
 
 
 class IJClient(object):
-    def __init__(self, host: str = 'localhost', port: int = 1234):
+    def __init__(self, host: str = 'localhost', port: int = 8080):
         self.host = host
         self.port = port
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     code = model_pb2.Code()
-    code.languageId = model_pb2.LanguageId.Python
+    code.languageId = model_pb2.LanguageId.kotlin
     with open(args.code_path) as f:
         code_sample = f.read()
         code.text = code_sample

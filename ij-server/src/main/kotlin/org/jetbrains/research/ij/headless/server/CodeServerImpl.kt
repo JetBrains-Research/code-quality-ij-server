@@ -3,12 +3,13 @@ package org.jetbrains.research.ij.headless.server
 import com.intellij.openapi.diagnostic.Logger
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import java.nio.file.Path
 
-class IJCodeServer(private val port: Int) {
+class CodeServerImpl(private val port: Int, templatesPath: Path) {
 
     private val logger = Logger.getInstance(javaClass)
 
-    private val server: Server = ServerBuilder.forPort(port).addService(IJCodeInspectionService()).build()
+    private val server: Server = ServerBuilder.forPort(port).addService(CodeInspectionServiceImpl(templatesPath)).build()
 
     fun start() {
         server.start()

@@ -33,6 +33,8 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
+        maven("https://packages.jetbrains.team/maven/p/big-code/bigcode")
     }
 
     intellij {
@@ -53,12 +55,12 @@ allprojects {
 
     tasks {
         withType<JavaCompile> {
-            sourceCompatibility = "11"
-            targetCompatibility = "11"
+            sourceCompatibility = "17"
+            targetCompatibility = "17"
         }
         withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
             kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = "17"
         }
         withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask>()
             .forEach { it.enabled = false }
