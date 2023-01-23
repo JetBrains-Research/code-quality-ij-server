@@ -27,12 +27,15 @@ class PsiFileManager(private val templatesPath: Path) {
 
     fun getPsiFile(language: Language, text: String = ""): PsiFile {
         return singleFileProjects.getOrPut(language) {
+
+            logger.info("Start to create new psi project for language $language")
+
             val (project, disposable) = createProject(
                 language,
                 templatesPath.resolve(language.id)
             ) ?: error("Can not create project for language $language")
 
-            logger.info("Start to create new psi file...")
+            logger.info("Start to create new for language $language")
 
             val file = AtomicReference<PsiFile>()
             ApplicationManager.getApplication().invokeAndWait {
@@ -40,9 +43,12 @@ class PsiFileManager(private val templatesPath: Path) {
                 file.set(psiFile)
             }
 
-            logger.info("Finish to create new psi file...")
+            logger.info("New fle for language for language has been successfully created")
             SingleFileProject(language, project, file.get(), disposable)
         }.file.apply {
+
+            logger.info("Start to update psi file content...")
+
             ApplicationManager.getApplication().invokeAndWait {
                 updatePsiFileContent(this, text)
             }
