@@ -27,7 +27,6 @@ class PsiFileManager(private val templatesPath: Path) {
 
     fun getPsiFile(language: Language, text: String = ""): PsiFile {
         return singleFileProjects.getOrPut(language) {
-
             logger.info("Start to create new psi project for language $language")
 
             val (project, disposable) = createProject(
@@ -46,7 +45,6 @@ class PsiFileManager(private val templatesPath: Path) {
             logger.info("New fle for language for language has been successfully created")
             SingleFileProject(language, project, file.get(), disposable)
         }.file.apply {
-
             logger.info("Start to update psi file content...")
 
             ApplicationManager.getApplication().invokeAndWait {

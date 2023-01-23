@@ -18,7 +18,9 @@ object IJCodeInspector {
 
     private fun getInspections(language: Language) =
         LocalInspectionEP.LOCAL_INSPECTION.extensions.filter { it.language == language.id }
-            .mapNotNull { it.instantiateTool() as? LocalInspectionTool }.toList()
+            .mapNotNull { it.instantiateTool() as? LocalInspectionTool }
+            .toList()
+            .also { logger.info("Found ${it.size} inspections for language $language") }
 
     private fun inspectSingle(psiFile: PsiFile, tool: LocalInspectionTool): List<ProblemDescriptor> {
         var problems: List<ProblemDescriptor>? = null
@@ -35,6 +37,7 @@ object IJCodeInspector {
     /** Runs language inspections on given code snippet and returns detected problems. */
     fun inspect(psiFile: PsiFile): Map<LocalInspectionTool, List<ProblemDescriptor>> {
         logger.info("Running code inspections...")
+        logger.info(psiFile.text)
         ApplicationManager.getApplication().assertIsDispatchThread()
 
         return getInspections(psiFile.language).associateWith { inspectSingle(psiFile, it) }

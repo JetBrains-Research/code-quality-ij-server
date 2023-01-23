@@ -23,6 +23,7 @@ class CodeInspectionServiceImpl(templatesPath: Path) :
         val file = psiFileManager.getPsiFile(language, request.text)
 
         val response = AtomicReference<InspectionResult>()
+
         ApplicationManager.getApplication().invokeAndWait {
             val result = IJCodeInspector.inspect(file)
             response.set(
