@@ -43,7 +43,9 @@ class PsiFileManager(private val templatesPath: Path) {
             logger.info("Finish to create new psi file...")
             SingleFileProject(language, project, file.get(), disposable)
         }.file.apply {
-            updatePsiFileContent(this, text)
+            ApplicationManager.getApplication().invokeAndWait {
+                updatePsiFileContent(this, text)
+            }
         }
     }
 }

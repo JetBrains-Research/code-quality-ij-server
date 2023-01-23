@@ -13,7 +13,7 @@ grpc = "1.31.1"
 grpc-kotlin = "0.2.0"
 protobuf = "3.19.4"
 protobuf-plugin = "0.8.13"
-plugin-utilities = "2.0"
+plugin-utilities = "2.0.1"
 
 [libraries]
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
@@ -36,7 +36,7 @@ grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 grpc-stub-kotlin = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin" }
 grpc-netty = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
-plugin-utilities = { module = "org.jetbrains.research:plugin-utilities-core", version.ref = "plugin-utilities" }
+plugin-utilities-core = { module = "org.jetbrains.research:plugin-utilities-core", version.ref = "plugin-utilities" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
