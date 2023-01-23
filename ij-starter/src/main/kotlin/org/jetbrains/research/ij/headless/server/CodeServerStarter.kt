@@ -9,7 +9,7 @@ import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.nio.file.Paths
 
-class IJCodeServerStarter : ApplicationStarter {
+class CodeServerStarter : ApplicationStarter {
 
     private val logger = Logger.getInstance(javaClass)
 
@@ -28,13 +28,12 @@ class IJCodeServerStarter : ApplicationStarter {
             help = "IJ Code Server config path"
         )
 
-        println(configPath)
-        val config = Json.decodeFromStream<IJCodeServerConfig>(File(configPath).inputStream())
-        println(config)
+        logger.info("Parsing IJ Server config from file $configPath")
+        val config = Json.decodeFromStream<CodeServerConfig>(File(configPath).inputStream())
+        logger.info("IJ Server config data $config")
 
         logger.info("Starting IJ Code Server on port=${config.port}")
-
-        val server = IJCodeServer(config.port, Paths.get(config.templatesPath))
+        val server = CodeServerImpl(config.port, Paths.get(config.templatesPath))
         server.start()
         server.blockUntilShutdown()
     }

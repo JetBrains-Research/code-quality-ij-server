@@ -5,19 +5,17 @@ import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiFile
-import com.jetbrains.python.PythonLanguage
-import org.jetbrains.research.ij.headless.server.utils.createProject
 import org.jetbrains.research.ij.headless.server.utils.createPsiFile
 import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
-class IJCodeInspectionService(templatesPath: Path) : CodeInspectionServiceGrpcKt.CodeInspectionServiceCoroutineImplBase() {
+class CodeInspectionServiceImpl(templatesPath: Path) :
+    CodeInspectionServiceGrpcKt.CodeInspectionServiceCoroutineImplBase() {
 
     private val logger = Logger.getInstance(javaClass)
 
-    private val project = createProject(PythonLanguage.INSTANCE, templatesPath) ?: error("Can not create project!")
-    private val dummyPsiFiles = mutableMapOf<Language, PsiFile>()
+    private val psiFileManager = PsiFileManager(templatesPath)
 
     override suspend fun inspect(request: Code): InspectionResult {
         logger.info("Receive request: $request")
@@ -25,7 +23,7 @@ class IJCodeInspectionService(templatesPath: Path) : CodeInspectionServiceGrpcKt
         val languageId = request.languageId.name
         val language = Language.findLanguageByID(request.languageId.name)
             ?: error("No such language by id $languageId")
-        val file = getDummyFile(language, request.text)
+        val file = psiFileManager.getPsiFile(language, request.text)
 
         val response = AtomicReference<InspectionResult>()
         ApplicationManager.getApplication().invokeAndWait {
@@ -53,23 +51,5 @@ class IJCodeInspectionService(templatesPath: Path) : CodeInspectionServiceGrpcKt
         }
 
         return response.get()
-    }
-
-    private fun getDummyFile(language: Language, text: String): PsiFile {
-        logger.info("Get dummy file for language $language with text $text")
-
-        return dummyPsiFiles.getOrPut(language) {
-            logger.info("Start to create new psi file...")
-
-            val file = AtomicReference<PsiFile>()
-            ApplicationManager.getApplication().invokeAndWait {
-                val psiFile = createPsiFile(project, "${language.id}_dummy", language, "")
-                updatePsiFileContent(psiFile, text)
-                file.set(psiFile)
-            }
-
-            logger.info("Finish to create new psi file...")
-            file.get()
-        }
     }
 }

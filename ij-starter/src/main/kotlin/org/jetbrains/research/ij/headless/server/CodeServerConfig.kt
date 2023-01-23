@@ -1,10 +1,9 @@
 package org.jetbrains.research.ij.headless.server
 
 import kotlinx.serialization.Serializable
-import java.nio.file.Path
 
 @Serializable
-data class IJCodeServerConfig(
+data class CodeServerConfig(
     val port: Int,
     val templatesPath: String
 )

@@ -9,7 +9,7 @@ import grpc
 
 
 class IJClient(object):
-    def __init__(self, host: str = 'localhost', port: int = 1234):
+    def __init__(self, host: str = 'localhost', port: int = 8080):
         self.host = host
         self.port = port
 
