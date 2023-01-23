@@ -20,14 +20,13 @@ class PsiFileManager(private val templatesPath: Path) {
         val language: Language,
         val project: Project,
         val file: PsiFile,
-        private val disposable: Disposable,
+        private val disposable: Disposable
     )
 
     private val singleFileProjects = mutableMapOf<Language, SingleFileProject>()
 
     fun getPsiFile(language: Language, text: String = ""): PsiFile {
         return singleFileProjects.getOrPut(language) {
-
             val (project, disposable) = createProject(
                 language,
                 templatesPath.resolve(language.id)
@@ -43,7 +42,6 @@ class PsiFileManager(private val templatesPath: Path) {
 
             logger.info("Finish to create new psi file...")
             SingleFileProject(language, project, file.get(), disposable)
-
         }.file.apply {
             updatePsiFileContent(this, text)
         }

@@ -4,9 +4,6 @@ import com.intellij.codeInspection.ProblemDescriptorUtil
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.psi.PsiFile
-import org.jetbrains.research.ij.headless.server.utils.createPsiFile
-import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 

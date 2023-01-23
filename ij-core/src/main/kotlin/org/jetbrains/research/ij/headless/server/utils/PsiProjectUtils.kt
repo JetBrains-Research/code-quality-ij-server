@@ -8,11 +8,11 @@ import com.jetbrains.python.PythonLanguage
 import org.jetbrains.research.pluginUtilities.openProject.getPythonProjectOpener
 import java.nio.file.Path
 
-fun createPythonProject(projectPath: Path): Pair<Project, Disposable>?  {
+fun createPythonProject(projectPath: Path): Pair<Project, Disposable>? {
     val projectOpener = getPythonProjectOpener()
     val disposable = Disposer.newDisposable()
 
-    return projectOpener.open(projectPath, disposable, true)?.let { it to disposable}
+    return projectOpener.open(projectPath, disposable, true)?.let { it to disposable }
 }
 
 fun createProject(language: Language, projectTemplatesDir: Path = Path.of(".")): Pair<Project, Disposable>? {
