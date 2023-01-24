@@ -34,7 +34,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     code = model_pb2.Code()
-    code.languageId = model_pb2.LanguageId.kotlin
+    code.languageId = model_pb2.LanguageId.Python
     with open(args.code_path) as f:
         code_sample = f.read()
         code.text = code_sample
