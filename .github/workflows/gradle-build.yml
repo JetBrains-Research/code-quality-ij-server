@@ -19,7 +19,7 @@ jobs:
         with:
           arguments: build --stacktrace -PrunDetekt -x test
 
-  detekt:
+  ktlint:
     needs: build
     runs-on: ubuntu-latest
 
