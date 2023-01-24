@@ -17,23 +17,26 @@ dependencies {
 }
 
 val protocPlatform: String? by project
+val jdk7Suffix = "jdk7@jar"
+
+fun makeMacOsXDependency(dependency: String, suffix: String = "osx-x86_64"): String {
+    return if (OperatingSystem.current().isMacOsX) {
+        "$dependency:$suffix"
+    } else {
+        dependency
+    }
+}
 
 protobuf {
     protoc {
-        artifact = if (OperatingSystem.current().isMacOsX) {
-            "com.google.protobuf:protoc:3.19.4:osx-x86_64"
-        } else {
-            "com.google.protobuf:protoc:3.19.4"
-        }
-//        // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties
-//        artifact = libs.protobuf.protoc.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
+        artifact = makeMacOsXDependency(libs.protobuf.protoc.get().toString())
     }
     plugins {
         create("grpc") {
-            artifact = libs.grpc.protoc.java.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
+            artifact = makeMacOsXDependency(libs.grpc.protoc.java.get().toString())
         }
         create("grpckt") {
-            artifact = libs.grpc.protoc.kotlin.get().toString() + ":jdk7@jar"
+            artifact = makeMacOsXDependency(libs.grpc.protoc.kotlin.get().toString(), jdk7Suffix)
         }
     }
     generateProtoTasks {
