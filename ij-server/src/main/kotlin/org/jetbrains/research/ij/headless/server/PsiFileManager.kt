@@ -42,7 +42,7 @@ class PsiFileManager(private val templatesPath: Path) {
                 file.set(psiFile)
             }
 
-            logger.info("New fle for language for language has been successfully created")
+            logger.info("New file for language has been successfully created")
             SingleFileProject(language, project, file.get(), disposable)
         }.file.apply {
             logger.info("Start to update psi file content...")
