@@ -1,4 +1,4 @@
 {
   "port": 8080,
-  "templatesPath": "/Users/maria.tigina/IdeaProjects/CodeQualityIJServer/templates"
+  "templatesPath": "./templates"
 }
