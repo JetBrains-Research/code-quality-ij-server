@@ -20,10 +20,8 @@ val protocPlatform: String? by project
 
 fun makeMacOsXDependency(dependency: String): String {
     return if (OperatingSystem.current().isMacOsX) {
-        println("IT IS MAC")
         "$dependency:osx-x86_64"
     } else {
-        println("IT IS NOT MAC")
         dependency
     }
 }
