@@ -17,12 +17,13 @@ dependencies {
 }
 
 val protocPlatform: String? by project
-val jdk7Suffix = "jdk7@jar"
 
-fun makeMacOsXDependency(dependency: String, suffix: String = "osx-x86_64"): String {
+fun makeMacOsXDependency(dependency: String): String {
     return if (OperatingSystem.current().isMacOsX) {
-        "$dependency:$suffix"
+        println("IT IS MAC")
+        "$dependency:osx-x86_64"
     } else {
+        println("IT IS NOT MAC")
         dependency
     }
 }
@@ -36,7 +37,7 @@ protobuf {
             artifact = makeMacOsXDependency(libs.grpc.protoc.java.get().toString())
         }
         create("grpckt") {
-            artifact = makeMacOsXDependency(libs.grpc.protoc.kotlin.get().toString(), jdk7Suffix)
+            artifact = libs.grpc.protoc.kotlin.get().toString() + ":jdk7@jar"
         }
     }
     generateProtoTasks {
