@@ -1,4 +1,5 @@
 import com.google.protobuf.gradle.*
+import org.gradle.internal.os.OperatingSystem
 
 group = rootProject.group
 version = rootProject.version
@@ -19,8 +20,13 @@ val protocPlatform: String? by project
 
 protobuf {
     protoc {
-        // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties
-        artifact = libs.protobuf.protoc.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
+        artifact = if (OperatingSystem.current().isMacOsX) {
+            "com.google.protobuf:protoc:3.19.4:osx-x86_64"
+        } else {
+            "com.google.protobuf:protoc:3.19.4"
+        }
+//        // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties
+//        artifact = libs.protobuf.protoc.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
     }
     plugins {
         create("grpc") {
