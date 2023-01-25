@@ -32,7 +32,7 @@ An example of the config file:
 ```json
 {
   "port": 8080,
-  "templatesPath": "path/to/templates/project"
+  "templatesPath": "path/to/templates/projects"
 }
 ```
 
@@ -54,6 +54,10 @@ source venv/bin/activate
 ```commandline
 pip install -r requirements.txt
 ```
+This folder can contain several template projects for different languages.
+The folder must be called as a language id. The supported languages are listed below:
+- Kotlin, id is `kotlin`
+- Python, id is `python`
 
 Next you can run the server.
 
