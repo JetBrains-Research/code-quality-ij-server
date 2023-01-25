@@ -103,7 +103,7 @@ Default description: `Argument equals to the default parameter value`
   <summary>PyAssignmentToLoopOrWithParameterInspection</summary>
 
 Checks for cases when you rewrite loop variable with inner loop. It finds all `with` and `for` statements, 
-takes variables declared by them and ensures none of parent `with or `for` declares variable with the same name.
+takes variables declared by them and ensures none of parent `with` or `for` declares variable with the same name.
 
 Example:
 ```python
@@ -209,6 +209,283 @@ Default description: `Byte literal contains characters > 255`
 </details>
 
 <details>
+  <summary>PyCallingNonCallableInspection</summary>
+
+Reports a problem when you are trying to call objects that are not callable, like, for example, properties.
+
+Example:
+```python
+class Record:
+    @property
+    def as_json(self): json = Record().as_json()
+```
+
+Default descriptions: 
+- For objects: `'{0}'' object is not callable`
+- For other cases: `''{0}'' is not callable`
+- For expressions: `Expression is not callable`
+</details>
+
+<details>
+  <summary>PyComparisonWithNoneInspection</summary>
+
+Reports comparisons with `None`. That type of comparisons should always be done with is or is not, 
+never the equality operators.
+
+Example:
+```python
+a = 2
+if a == None:
+    print("Success")
+```
+
+Default description: `Comparison with None performed with equality operators`
+</details>
+
+<details>
+  <summary>PyDataclassInspection</summary>
+
+Reports invalid definitions and usages of classes created with dataclasses or attr modules.
+
+Examples with default descriptions:
+
+1) `''{0}'' not supported between instances of ''{1}''`
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class A:
+    x: int = 10
+
+
+a = A(1)
+b = A(2)
+print(a < b)
+```
+See [pep-0557](https://peps.python.org/pep-0557), the `order` block
+
+2) `''{0}'' object could have no attribute ''{1}'' because it is declared as init-only`
+```python
+from __future__ import annotations
+from dataclasses import dataclass, InitVar
+
+
+@dataclass
+class C:
+    i: int
+    init_only: InitVar[int | None] = None
+
+    def __post_init__(self, init_only):
+        if self.i is None and init_only is not None:
+            self.i = init_only
+
+
+c = C(10, init_only=5)
+print(c.init_only)
+```
+
+See [Init only variables](https://docs.python.org/3/library/dataclasses.html#init-only-variables).
+
+3) `''{0}'' object attribute ''{1}'' is read-only`
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class A:
+    i: int
+
+
+a = A(5)
+a.i = 10
+```
+
+4) `'eq' must be true if 'order' is true`
+```python
+from dataclasses import dataclass
+
+
+@dataclass(eq=False, order=True)
+class A:
+    pass
+```
+
+5) `''{0}'' is ignored if the class already defines ''{1}'' method`, `''{0}'' is ignored if the class already defines ''{1}'' parameter`
+
+**TODO: add example**
+
+6) `'order' should be False if the class defines one of order methods`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(order=True)
+class A:
+    def __le__(self, other):
+        pass
+```
+
+7) `'frozen' should be False if the class defines '__setattr__' or '__delattr__'`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class A:
+    def __setattr__(self, key, value):
+        pass
+```
+
+8) `'unsafe_hash' should be False if the class defines '__hash__'`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(unsafe_hash=True)
+class A:
+    def __hash__(self):
+        pass
+```
+
+9) `Frozen dataclasses can not inherit non-frozen one and vice versa`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class A:
+    pass
+
+
+@dataclass
+class B(A):
+    pass
+```
+
+10) `'__hash__' is ignored if the class already defines 'cmp/order' and 'frozen' parameters`
+
+**TODO: add example**
+
+11) `Mutable default ''{0}'' is not allowed. Use ''default_factory''`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class A:
+    bar: list = []
+```
+
+12) `A default is set using ''{0}''`
+
+**TODO: add example**
+
+13) `''{0}'' should take only {1} {1,choice,1#parameter|2#parameters}`
+
+**TODO: add example**
+
+14) `Attribute ''{0}'' lacks a type annotation`
+
+**TODO: add example**
+
+15) `Cannot specify both 'default' and 'factory'`
+
+```python
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Pizza:
+    meat: str = field(default='chicken', default_factory=['dow', 'tomatoes'])
+```
+
+16) `Attribute ''{0}'' is useless until ''__post_init__'' is declared`
+
+```python
+from __future__ import annotations
+from dataclasses import dataclass, InitVar
+
+
+@dataclass
+class C:
+    i: int
+    init_only: InitVar[int | None] = None
+```
+
+17) `Field cannot have a default factory`
+
+```python
+from dataclasses import dataclass, InitVar, field
+from typing import List
+
+
+@dataclass
+class A:
+    a: InitVar[List[str]] = field(default_factory=list)
+
+```
+
+18) `'__post_init__' would not be called until 'init' parameter is set to True`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(init=False)
+class A:
+    def __post_init__(self):
+        pass
+```
+
+19) `'__post_init__' should take all init-only variables (incl. inherited) in the same order as they are defined`
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class A:
+    a: int
+    b: str
+
+    def __post_init__(self, b: str, a: int):
+        pass
+```
+
+20) `'__attrs_post_init__' would not be called until 'init' parameter is set to True`
+`'__attrs_post_init__' should not take any parameters except 'self'`
+
+**TODO: add example**
+
+21) `''{0}'' method should be called on dataclass instances or types`, `''{0}'' method should be called on dataclass instances`, `''{0}'' method should be called on attrs instances`, `''{0}'' method should be called on attrs types`
+
+**TODO: add example**
+</details>
+
+
+<details>
+  <summary>PyDictCreationInspection</summary>
+
+Reports situations when you can rewrite dictionary creation by using a dictionary literal.
+
+Example:
+```python
+dic = {}
+dic['var'] = 1
+```
+
+Default description: `This dictionary creation could be rewritten as a dictionary literal`
+</details>
+
+
+
+<details>
   <summary></summary>
 
 Example:
@@ -219,10 +496,6 @@ Example:
 Default description: ``
 </details>
 
-- PyCallingNonCallableInspection
-- PyComparisonWithNoneInspection
-- PyDataclassInspection
-- PyDictCreationInspection
 - PyDictDuplicateKeysInspection
 - PyDunderSlotsInspection
 - PyExceptClausesOrderInspection
