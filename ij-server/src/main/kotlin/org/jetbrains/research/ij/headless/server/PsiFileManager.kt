@@ -31,7 +31,7 @@ class PsiFileManager(private val templatesPath: Path) {
 
             val (project, disposable) = createProject(
                 language,
-                templatesPath.resolve(language.id)
+                templatesPath.resolve(language.id.uppercase())
             ) ?: error("Can not create project for language $language")
 
             logger.info("Start to create new for language $language")
