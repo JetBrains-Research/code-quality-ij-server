@@ -1,4 +1,5 @@
 import com.google.protobuf.gradle.*
+import org.gradle.internal.os.OperatingSystem
 
 group = rootProject.group
 version = rootProject.version
@@ -17,14 +18,21 @@ dependencies {
 
 val protocPlatform: String? by project
 
+fun makeMacOsXDependency(dependency: String): String {
+    return if (OperatingSystem.current().isMacOsX) {
+        "$dependency:osx-x86_64"
+    } else {
+        dependency
+    }
+}
+
 protobuf {
     protoc {
-        // for apple m1, please add protoc_platform=osx-x86_64 in $HOME/.gradle/gradle.properties
-        artifact = libs.protobuf.protoc.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
+        artifact = makeMacOsXDependency(libs.protobuf.protoc.get().toString())
     }
     plugins {
         create("grpc") {
-            artifact = libs.grpc.protoc.java.get().toString() + (protocPlatform?.let { ":$it" } ?: "")
+            artifact = makeMacOsXDependency(libs.grpc.protoc.java.get().toString())
         }
         create("grpckt") {
             artifact = libs.grpc.protoc.kotlin.get().toString() + ":jdk7@jar"

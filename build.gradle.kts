@@ -10,12 +10,16 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ktor) apply false
     alias(libs.plugins.protobuf) apply false
+    alias(libs.plugins.detekt) apply false
 }
 
 val platformVersion: String by project
 val platformType: String by project
 val platformDownloadSources: String by project
 val platformPlugins: String by project
+val detektReportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    output.set(rootProject.buildDir.resolve("reports/detekt/merge.sarif"))
+}
 
 allprojects {
     apply {
@@ -53,6 +57,22 @@ allprojects {
         }
     }
 
+    apply<io.gitlab.arturbosch.detekt.DetektPlugin>()
+
+    configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
+        config = rootProject.files("detekt.yml")
+        buildUponDefaultConfig = true
+        debug = true
+    }
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt> {
+        finalizedBy(detektReportMerge)
+        reports.sarif.required.set(true)
+        detektReportMerge.get().input.from(sarifReportFile)
+    }
+
+    tasks.getByPath("detekt").onlyIf { project.hasProperty("runDetekt") }
+
     tasks {
         withType<JavaCompile> {
             sourceCompatibility = "17"
@@ -62,7 +82,6 @@ allprojects {
             kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
             kotlinOptions.jvmTarget = "17"
         }
-        withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask>()
-            .forEach { it.enabled = false }
+        withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask>().forEach { it.enabled = false }
     }
 }
