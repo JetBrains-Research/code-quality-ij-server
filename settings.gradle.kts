@@ -1,4 +1,4 @@
-rootProject.name = "CodeQualityIJServer"
+rootProject.name = "code-quality-ij-server"
 
 enableFeaturePreview("VERSION_CATALOGS")
 

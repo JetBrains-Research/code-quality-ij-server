@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.gradle.ktlint)
     alias(libs.plugins.jetbrains.intellij)
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.ktor) apply false
     alias(libs.plugins.protobuf) apply false
     alias(libs.plugins.detekt) apply false
 }
