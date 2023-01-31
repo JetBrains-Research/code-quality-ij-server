@@ -483,6 +483,356 @@ dic['var'] = 1
 Default description: `This dictionary creation could be rewritten as a dictionary literal`
 </details>
 
+<details>
+  <summary>PyDictDuplicateKeysInspection</summary>
+
+Reports using the same value as the dictionary key twice.
+
+Example:
+```python
+dic = {"a": [1, 2], "a": [3, 4]}
+```
+Note, the inspection indicates both cases and appears twice
+
+Default description: `Dictionary contains duplicate keys ''{0}''`
+
+</details>
+
+<details>
+  <summary>PyDunderSlotsInspection</summary>
+
+Reports invalid usages of a class with __slots__ definitions.
+
+1. Example:
+```python
+class C(object):
+    __slots__ = ('x',)
+    x = 0
+```
+
+Default description: `'{0}'' in __slots__ conflicts with a class variable`
+
+2. Example:
+```python
+class Foo:
+    __slots__ = ['foo', 'bar']
+
+    
+foo = Foo()
+foo.baz = 'spam'
+```
+
+Default description: `''{0}'' object attribute ''{1}'' is read-only`
+</details>
+
+<details>
+  <summary>PyExceptClausesOrderInspection</summary>
+
+Report cases when except clauses are not in the proper order, 
+from the more specific to the more generic, or one exception class is caught twice.
+
+1. Example:
+```python
+def foo():
+    pass
+
+
+try:
+    foo()
+except Exception:
+    pass
+except Exception:
+    pass
+```
+
+Default description: `Exception class ''{0}'' has already been caught`
+
+2. Example:
+```python
+def foo():
+    pass
+
+
+try:
+    foo()
+except ValueError:
+    pass
+except UnicodeError:
+    pass
+```
+
+Default description: `''{0}'', superclass of the exception class ''{1}'', has already been caught`
+</details>
+
+<details>
+  <summary>PyFinalInspection</summary>
+
+Reports invalid usages of final classes, methods and variables.
+
+1. Example:
+```python
+from typing import final
+
+
+@final
+class A:
+    pass
+
+
+class B(A):
+    pass
+```
+
+Default description: `{0} {1,choice,1#is|2#are} marked as ''@final'' and should not be subclassed`
+
+2. Example:
+```python
+
+```
+
+Default description: `'@final' should be placed on the first overload` (only for stubs)
+
+**TODO: add an example**, see - https://peps.python.org/pep-0591/
+
+3. Example:
+```python
+from typing import final
+
+
+class Dummy:
+    @final
+    def display(self):
+        print("display from dummy")
+
+
+class Demo(Dummy):
+    def display(self):
+        print("display from demo")
+```
+
+Default description: `''{0}'' is marked as ''@final'' and should not be overridden`
+
+4. Example:
+```python
+from typing import overload, final
+
+
+class Base:
+    @overload
+    def method(self, arg: int) -> int:
+        pass
+
+    @overload
+    @final
+    def method(self, x=None):
+        pass
+```
+
+Default description: `'@final' should be placed on the implementation`
+
+5. Example:
+```python
+from abc import ABCMeta, abstractmethod
+from typing import final
+
+
+class MyABC(metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    @final
+    def my_abstract_property(self):
+        ...
+```
+
+Default description: `'Final' could not be mixed with abstract decorators`
+
+6. Example:
+```python
+from abc import ABCMeta, abstractmethod
+from typing import final
+
+
+@final
+class MyABC(metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    def my_abstract_property(self):
+        ...
+```
+
+Default description: `'Final' class could not contain abstract methods`
+
+Note, the inspection indicates both cases and appears twice: `MyABC` and `my_abstract_property`
+
+7. Example:
+```python
+from typing import final
+
+
+@final
+class MyABC:
+    @final
+    def foo(self):
+        ...
+```
+
+Default description: `No need to mark method in 'Final' class as '@final'`
+
+8. Example:
+```python
+from typing import final
+
+
+@final
+def foo():
+    ...
+```
+
+Default description: `Non-method function could not be marked as '@final'`
+
+9. Example:
+```python
+from typing import List, Final
+
+
+def fun(x: Final[List[int]]) -> None:
+    ...
+```
+
+Default description: `'Final' could not be used in annotations for function parameters`
+
+10. Example:
+```python
+from typing import List, Final
+
+
+def fun() -> Final[List[int]]:
+    ...
+```
+
+Default description: `'Final' could not be used in annotation for a function return value`
+
+11. Example:
+```python
+
+```
+
+**TODO: add an example**
+
+Default description: `If assigned value is omitted, there should be an explicit type argument to 'Final'`
+
+12. Example:
+```python
+from typing import Final
+
+
+def fun():
+    a: Final
+```
+
+Default description: `'Final' name should be initialized with a value`
+
+13. Example:
+```python
+from typing import Final
+
+
+class A:
+    a: Final[int] = 1
+
+    def __init__(self, a):
+        self.a: Final[int] = a
+```
+
+Default description: `Already declared name could not be redefined as 'Final'`
+
+14. Example:
+```python
+from typing import Final
+
+
+class A:
+    a: Final[int]
+
+    def __init__(self):
+        self.a: Final[str] = ""
+```
+
+Default description: `Either instance attribute or class attribute could be type hinted as 'Final'`
+
+Note, the inspection indicates both cases and appears twice
+
+15. Example:
+```python
+from typing import Final
+
+
+class Mode:
+    def __init__(self, title):
+        self.a: Final[bool] = True
+
+
+class Mode2(Mode):
+    def __init__(self, title):
+        super().__init__(title)
+        self.a: Final[int] = 5
+```
+
+Default description: `''{0}'' is ''Final'' and could not be overridden`
+
+16. Example:
+```python
+from typing import Final
+
+
+class A:
+    def foo(self):
+        self.a: Final[int] = 5
+```
+
+Default description: `'Final' attribute should be declared in class body or '__init__'`
+
+17. Example:
+```python
+from typing import Final
+
+
+class Dummy:
+    x: Final[int] = 1
+
+
+class Demo(Dummy):
+    x: str = ""
+
+```
+
+Default description: `''{0}'' is ''Final'' and could not be reassigned`
+
+18. Example:
+```python
+from typing import Final, List
+
+
+class A:
+    a: List[Final] = 5
+```
+
+Default description: `'Final' could only be used as the outermost type`
+
+19. Example:
+```python
+from typing import Final, List
+
+
+class A:
+    def foo(self):
+        for i in range(0, 10):
+            a: Final[int] = 5
+
+```
+
+Default description: `'Final' could not be used inside a loop`
+</details>
 
 
 <details>
@@ -496,10 +846,6 @@ Example:
 Default description: ``
 </details>
 
-- PyDictDuplicateKeysInspection
-- PyDunderSlotsInspection
-- PyExceptClausesOrderInspection
-- PyFinalInspection
 - PyClassVarInspection
 - PyFromFutureImportInspection
 - PyGlobalUndefinedInspection
@@ -511,6 +857,7 @@ Default description: ``
 - PyRedeclarationInspection
 - PyMethodParametersInspection
 - PyUnreachableCodeInspection
+
 - PyMethodFirstArgAssignmentInspection
 - PyStringFormatInspection
 - PyMethodOverridingInspection
