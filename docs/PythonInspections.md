@@ -834,6 +834,362 @@ class A:
 Default description: `'Final' could not be used inside a loop`
 </details>
 
+<details>
+  <summary>PyClassVarInspection</summary>
+
+1. Example:
+```python
+from typing import ClassVar
+
+
+class Cat:
+    color: ClassVar[str] = "white"
+    weight: int
+
+    def __init__(self, weight: int):
+        self.weight = weight
+        Cat.color = "black"
+        my_cat = Cat(5)
+        my_cat.color = "gray"
+```
+
+Default description: `Cannot assign to class variable ''{0}'' via instance`
+
+2. Example:
+```python
+from typing import ClassVar
+
+color: ClassVar[str] = "white"
+```
+
+Default description: `'ClassVar' can only be used for assignments in class body`
+
+3. Example:
+```python
+from typing import ClassVar
+
+
+def foo():
+    color: ClassVar[str] = "white"
+```
+
+Default description: `ClassVar' cannot be used in annotations for local variables`
+
+4. Example:
+```python
+from typing import ClassVar
+
+
+class A:
+    color: ClassVar[str] = "white"
+
+
+class B(A):
+    color: int = 5
+```
+
+Default description: `Cannot override class variable ''{0}'' (previously declared on base class ''{1}'') with instance variable`
+
+5. Example:
+```python
+from typing import ClassVar
+
+
+class A:
+    color: int = 5
+
+
+class B(A):
+    color: ClassVar[str] = "white"
+```
+
+Default description: `Cannot override instance variable ''{0}'' (previously declared on base class ''{1}'') with class variable`
+
+6. Example:
+```python
+from typing import ClassVar
+
+
+def foo(color: ClassVar[str]):
+    pass
+```
+
+Default description: `'ClassVar' cannot be used in annotations for function parameters`
+
+7. Example:
+```python
+from typing import ClassVar
+
+
+def foo() -> ClassVar[str]:
+    pass
+```
+
+Default description: `'ClassVar' cannot be used in annotation for a function return value`
+
+8. Example:
+```python
+from typing import ClassVar, TypeVar, List
+
+T = TypeVar("T")
+
+
+class A:
+    color: ClassVar[List[T]] = []
+```
+
+Default description: `'ClassVar' parameter cannot include type variables`
+</details>
+
+
+<details>
+  <summary>PyFromFutureImportInspection</summary>
+
+Reports from `__future__` import statements that are used not at the beginning of a file.
+
+Example:
+```python
+a = 1
+
+from __future__ import print_function
+
+print()
+```
+
+Default description: `from __future__ imports must occur at the beginning of the file`
+</details>
+
+<details>
+  <summary>PyGlobalUndefinedInspection</summary>
+
+Reports problems when a variable defined through the `global` statement is not defined in the module scope.
+
+Example:
+```python
+def foo():
+    global bar
+    print(bar)
+    foo()
+```
+
+Default description: `Global variable ''{0}'' is undefined at the module level`
+</details>
+
+<details>
+  <summary>PyInconsistentIndentationInspection</summary>
+
+Reports inconsistent indentation in Python source files when, for example, you use a mixture of tabs and spaces in your code.
+
+Default descriptions: 
+- `Inconsistent indentation: mix of tabs and spaces`
+- `Inconsistent indentation: previous line used tabs, this line uses spaces`
+- `Inconsistent indentation: previous line used spaces, this line uses tabs`
+
+</details>
+
+<details>
+  <summary>PyIncorrectDocstringInspection</summary>
+
+Reports mismatched parameters in a docstring.
+
+1. Example:
+```python
+def add(a, c):
+    """ 
+    @param a: 
+    @return: 
+    """
+    pass
+```
+
+Default description: `Missing parameter {0} in docstring`
+
+2. Example:
+```python
+def add(a, c):
+    """ 
+    @param a: 
+    @param b:
+    @return: 
+    """
+    pass
+```
+
+Default description: `Unexpected parameter {0} in docstring`
+</details>
+
+
+<details>
+  <summary>PyMissingOrEmptyDocstringInspection</summary>
+
+1. Example:
+```python
+def foo():
+    """
+    """
+    pass
+```
+
+Default description: `Empty docstring`
+
+2. Example:
+```python
+def foo():
+    pass
+```
+
+Default description: `Missing docstring`
+</details>
+
+<details>
+  <summary>PyNamedTupleInspection</summary>
+
+Reports invalid definition of a `typing.NamedTuple`.
+
+Example:
+```python
+import typing
+
+class FullName(typing.NamedTuple):
+    first: str
+    last: str = ""
+    middle: str
+```
+
+Default description: `Fields with a default value must come after any fields without a default.`
+</details>
+
+<details>
+  <summary>PyArgumentListInspection</summary>
+
+Reports discrepancies between declared parameters and actual arguments, 
+as well as incorrect arguments, for example, duplicate named arguments, and incorrect argument order.
+
+1. Example:
+```python
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar(5, "#")
+```
+
+Default description: `Unexpected argument`, `Unexpected argument(s)`
+
+2. Example:
+```python
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar.__call__()
+```
+
+Default description: `Parameter ''{0}'' unfilled`, `Parameter(s) unfilled`
+
+3. Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `Possible callees`
+
+4. Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `Function ''{0}'' lacks a positional argument`
+
+5. Example:
+```python
+def foo(d: dict):
+    pass
+
+foo(5)
+```
+
+Default description: `Expected a dictionary, got {0}`, '`Expected an iterable, got {0}`'
+</details>
+
+<details>
+  <summary>PyRedeclarationInspection</summary>
+
+Reports unconditional redeclarations of names without being used in between.
+
+Example:
+```python
+def x():
+    pass
+
+x = 2
+```
+
+Default description: `Redeclared ''{0}'' defined above without usage`
+</details>
+
+<details>
+  <summary>PyMethodParametersInspection</summary>
+
+Reports methods that lack the first parameter that is usually named self.
+The inspection also reports naming issues in class methods.
+
+1. Example:
+```python
+class Movie:
+    def show():
+        pass
+```
+
+Default description: `Method must have a first parameter, usually called ''{0}''`, 
+`Usually first parameter of a method is named 'self'`, 
+`Usually first parameter of such methods is named ''{0}''`
+
+2. Example:
+```python
+class Movie:
+    def show(sself):
+        pass
+```
+
+Default description: `Did not you mean 'self'?`
+
+Note: this inspection uses the following list of words with typos: `{"eslf", "sself", "elf", "felf", "slef", "seelf", "slf", "sslf", "sefl", "sellf", "sef", "seef"}`
+
+3. Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `First parameter of a non-static method must not be a tuple`
+</details>
+
+<details>
+  <summary>PyUnreachableCodeInspection</summary>
+
+Reports code fragments that cannot be normally reached.
+
+Example:
+```python
+if True:
+    print('Yes')
+else:
+    print('No')
+```
+
+Default description: `This code is unreachable`
+</details>
+
 
 <details>
   <summary></summary>
@@ -845,18 +1201,6 @@ Example:
 
 Default description: ``
 </details>
-
-- PyClassVarInspection
-- PyFromFutureImportInspection
-- PyGlobalUndefinedInspection
-- PyInconsistentIndentationInspection
-- PyIncorrectDocstringInspection
-- PyMissingOrEmptyDocstringInspection
-- PyNamedTupleInspection
-- PyArgumentListInspection
-- PyRedeclarationInspection
-- PyMethodParametersInspection
-- PyUnreachableCodeInspection
 
 - PyMethodFirstArgAssignmentInspection
 - PyStringFormatInspection
