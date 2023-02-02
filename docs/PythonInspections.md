@@ -2360,6 +2360,73 @@ class Triangle(Figure):
 Default description: `Class {0} must implement all abstract methods`
 </details>
 
+<details>
+  <summary>PyMissingTypeHintsInspection</summary>
+
+Arguments (by default all are `true`):
+- `m_onlyWhenTypesAreKnown` -  to check the types collected from runtime or inferred.
+
+Reports missing type hints for function declaration in one of the two formats: parameter annotations or a type comment.
+
+Default descriptions: `Type hinting is missing for a function definition`, 
+`Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
+
+</details>
+
+<details>
+  <summary>PyOverloadsInspection</summary>
+
+Reports cases when overloads in regular Python files are placed after the implementation 
+or when their signatures are not compatible with the implementation.
+
+1. Example:
+```python
+from typing import overload
+
+
+class A:
+    @overload
+    def foo(self, value: None) -> None:
+        pass
+
+    @overload
+    def foo(self, value: int) -> str:
+        pass
+
+    def foo(self, value):
+        return None
+
+    @overload
+    def foo(self, value: str) -> str:
+        pass
+```
+
+Default descriptions: `A series of @overload-decorated methods should always be followed by an implementation that is not @overload-ed`,
+`A series of @overload-decorated functions should always be followed by an implementation that is not @overload-ed`
+
+2. Example:
+```python
+from typing import overload
+
+
+class A:
+    @overload
+    def foo(self) -> None:
+        pass
+
+    @overload
+    def foo(self, value: str) -> str:
+        pass
+
+    def foo(self, value):
+        return None
+```
+
+Default descriptions: `Signature of this @overload-decorated method is not compatible with the implementation`,
+`Signature of this @overload-decorated function is not compatible with the implementation`
+
+</details>
+
 
 <details>
   <summary></summary>
@@ -2372,8 +2439,6 @@ Example:
 Default description: ``
 </details>
 
-- PyMissingTypeHintsInspection
-- PyOverloadsInspection
 - PyProtocolInspection
 - PyTypeHintsInspection
 - PyTypedDictInspection
