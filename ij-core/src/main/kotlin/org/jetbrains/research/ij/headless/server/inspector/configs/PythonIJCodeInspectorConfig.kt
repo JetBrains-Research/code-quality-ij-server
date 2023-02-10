@@ -34,13 +34,14 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
         "PyOldStyleClasses",
         "PyUnnecessaryBackslash",
         "PyMandatoryEncoding",
-        "PyClassHasNoInit",
+        "PyClassHasNoInit"
     )
 
     override val inspectionIdToDisabledMessages: Map<String, Set<String>> = mapOf(
         // BEST_PRACTICES
         "PyDataclass" to setOf(
-            "A default is set using", "should take only"
+            "A default is set using",
+            "should take only"
         ),
 
         // COMPLEXITY
@@ -48,17 +49,36 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
         // ERROR_PRONE
         "PyFinal" to setOf(
             "'@final' should be placed on the implementation"
-        ),
+        )
 
         // CODE_STYLE
     )
 
-    override val inspectionIdToAdaptedMessages: Map<String, Map<String, String>> = mapOf(
+    override val inspectionIdToAdaptedMessages: Map<String, Map<String, AdaptedMessage>> = mapOf(
         // BEST_PRACTICES
         "PySimplifyBooleanCheck" to mapOf(
-            "Expression can be simplified" to "Expression can be simplified, e.g. `if a != False:` is the same with `if a:`"
-        ), "PyArgumentEqualDefault" to mapOf(
-            "Argument equals to the default parameter value" to "Argument equals to the default parameter value. You can delete the argument, the default parameter value will be used automatically."
+            "Expression can be simplified" to AdaptedMessage(
+                suffix = ", e.g. `if a != False:` is the same with `if a:`"
+            )
+        ),
+        "PyArgumentEqualDefault" to mapOf(
+            "Argument equals to the default parameter value" to AdaptedMessage(
+                suffix = ". You can delete the argument, the default parameter value will be used automatically."
+            )
+        ),
+        "PyBroadException" to mapOf(
+            "Too broad exception clause" to AdaptedMessage(
+                toReuseDescription = false,
+                prefix = "Please, specify the exception type, but avoid using too general exception `Exception`"
+            )
+        ),
+        "PyDataclass" to mapOf(
+            "not supported between instances of" to AdaptedMessage(
+                suffix = ". You should add parameters into `dataclass` decorator: @dataclass(order=True)."
+            ),
+            "because it is declared as init-only" to AdaptedMessage(
+                suffix = ". Please, don't call this attribute."
+            )
         )
     )
 }

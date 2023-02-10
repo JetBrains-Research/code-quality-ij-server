@@ -1,6 +1,7 @@
 package org.jetbrains.research.ij.headless.server.inspector.configs.python
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -26,9 +27,25 @@ class IJCodeInspectorConfigDisableMessageTest : BasePlatformTestCase() {
         requireNotNull(disabledMessage) { "Disabled message was not passed!" }
         val adaptedInspections = getAdaptedInspections(myFixture, code!!, inspectionId!!).map { it.description }
         assert(disabledMessage !in adaptedInspections) { "Found disabled descriptor $disabledMessage for inspection $inspectionId for code${System.lineSeparator()}$code" }
+
+        // Some inspections can not be preformed in test data (like inspections for stubs)
+        // So, for them, we can not check the default behaviour
+        if (inspectionId in ignoredInspections) {
+            return
+        }
+        // default behaviour
+        val allAdaptedInspections = getAdaptedInspections(
+            myFixture,
+            code!!,
+            inspectionId!!,
+            object : BaseIJCodeInspectorConfig() {}
+        ).map { it.description }
+        assert(allAdaptedInspections.any { disabledMessage!! in it }) { "By some reason inspection $inspectionId was not run at all" }
     }
 
     companion object {
+        private val ignoredInspections = listOf("PyFinal")
+
         @JvmStatic
         @Parameterized.Parameters(name = "Inspection id: {0}, code: {1}")
         fun getTestData() = listOf(
