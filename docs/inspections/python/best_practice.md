@@ -115,8 +115,6 @@ except:
 Default description: `Too broad exception clause`
 </details>
 
-**TODO: separate PyDataclassInspection inside Hypertsyle??**
-
 <details>
   <summary>PyDataclassInspection</summary>
 
