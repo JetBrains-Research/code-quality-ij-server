@@ -482,6 +482,108 @@ class Sum:
 Default description: `Cannot return a value from __init__`
 </details>
 
+<details>
+  <summary>PyListCreationInspection</summary>
+
+Reports cases when a list declaration can be rewritten with a list literal.
+
+Example:
+```python
+l = [1]
+l.append(2)
+```
+
+Default description: `This list creation could be rewritten as a list literal`
+</details>
+
+<details>
+  <summary>PySetFunctionToLiteralInspection</summary>
+
+Reports calls to the `set` function that can be replaced with the `set` literal.
+
+Example:
+```python
+def do_mult(a, b):
+    c = a * b
+    return set([c, a, b])
+```
+
+Default description: `Function call can be replaced with set literal`
+</details>
+
+<details>
+  <summary>PyProtectedMemberInspection</summary>
+
+Reports cases when a protected member is accessed outside the class,
+a descendant of the class where it is defined, or a module.
+
+1. Example:
+```python
+class A:
+  def __init__(self):
+    self._a = 1
+
+  def foo(self):
+    self.b= 1
+
+
+print(A()._a)
+```
+
+Default descriptions: `Access to a protected member {0} of a class`, `Access to a protected member {0} of a module`
+
+2. Example:
+```python
+# File 1
+__all__ = ["m1m1"]
+
+
+def m1m1():
+    pass
+
+
+def m1m2():
+    pass
+    
+# File 2
+from m1 import m1m2
+```
+
+Default description: `'{0}'' is not declared in __all__`
+</details>
+
+<details>
+  <summary>PyMethodMayBeStaticInspection</summary>
+
+Reports any methods that do not require a class instance creation and can be made static.
+
+Example:
+```python
+class MyClass(object):
+    def my_method(self, x):
+        print(x)
+```
+
+Default description: `Method <code>#ref</code> may be 'static'`
+</details>
+
+<details>
+  <summary>PyChainedComparisonsInspection</summary>
+
+Reports chained comparisons that can be simplified.
+
+Example:
+```python
+def do_comparison(x):
+    xmin = 10
+    xmax = 100
+    if x >= xmin and x <= xmax:
+        pass
+```
+
+Default description: `Simplify chained comparison`
+</details>
+
 #### Disabled issues
 
 <details>
@@ -535,4 +637,47 @@ def foo():
 ```
 
 Default description: `Missing docstring`
+</details>
+
+<details>
+  <summary>PySingleQuotedDocstringInspection</summary>
+
+Reports docstrings that do not adhere to the triple double-quoted string format.
+
+Example:
+```python
+def calc(self, balance=0):
+    'param: balance'
+    self.balance = balance
+```
+
+Default description: `Triple double-quoted strings should be used for docstrings.`
+</details>
+
+<details>
+  <summary>PyDocstringTypesInspection</summary>
+
+Reports types in docstring that do not match dynamically inferred types.
+
+Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `Dynamically inferred type ''{0}'' doesn''t match specified type ''{1}''`
+</details>
+
+<details>
+  <summary>PyMissingTypeHintsInspection</summary>
+
+Arguments (by default all are `true`):
+- `m_onlyWhenTypesAreKnown` -  to check the types collected from runtime or inferred.
+
+Reports missing type hints for function declaration in one of the two formats: parameter annotations or a type comment.
+
+Default descriptions: `Type hinting is missing for a function definition`,
+`Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
+
 </details>
