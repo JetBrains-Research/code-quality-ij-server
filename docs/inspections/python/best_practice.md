@@ -1,4 +1,4 @@
-## Best practice inspections
+~~## Best practice inspections
 
 #### General definition
 
@@ -51,6 +51,7 @@ if b != False:
 ```
 
 Default description: `Expression can be simplified`
+New description: `Expression can be simplified, e.g. "if a != False:" is the same with "if a:"`
 </details>
 
 <details>
@@ -68,6 +69,7 @@ my_function(2)
 ```
 
 Default description: `Argument equals to the default parameter value`
+New description: `Argument equals to the default parameter value. You can delete the argument, the default parameter value will be used automatically.`
 </details>
 
 <details>
@@ -113,6 +115,7 @@ except:
 ```
 
 Default description: `Too broad exception clause`
+New description: `Please, specify the exception type, but avoid using too general exception "Exception"`
 </details>
 
 <details>
@@ -124,6 +127,7 @@ Examples with default descriptions:
 
 **ERROR-PRONE**
 1) `''{0}'' not supported between instances of ''{1}''`
+New description: `''{0}'' not supported between instances of ''{1}''. You should add parameters into "dataclass" decorator: @dataclass(order=True).`
 ```python
 from dataclasses import dataclass
 
@@ -141,6 +145,8 @@ See [pep-0557](https://peps.python.org/pep-0557), the `order` block
 
 **ERROR-PRONE**
 2) `''{0}'' object could have no attribute ''{1}'' because it is declared as init-only`
+Adapted description: `''{0}'' object could have no attribute ''{1}'' because it is declared as init-only. Please, don't call this attribute.`
+
 ```python
 from __future__ import annotations
 from dataclasses import dataclass, InitVar
@@ -678,4 +684,4 @@ Reports missing type hints for function declaration in one of the two formats: p
 Default descriptions: `Type hinting is missing for a function definition`,
 `Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
 
-</details>
+</details>~~

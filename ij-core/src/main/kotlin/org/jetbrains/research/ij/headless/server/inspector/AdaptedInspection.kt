@@ -37,8 +37,8 @@ data class AdaptedInspection(
 
         private fun BaseIJCodeInspectorConfig.adaptMessage(inspection: LocalInspectionTool, message: String): String {
             val messagesToAdapt = this.inspectionIdToAdaptedMessages[inspection.id] ?: return message
-            val initialMessageKey = messagesToAdapt.keys.find { message in it } ?: return message
-            return messagesToAdapt[initialMessageKey]!!
+            val initialMessageKey = messagesToAdapt.keys.find { it in message } ?: return message
+            return messagesToAdapt[initialMessageKey]!!.buildMessageText(message)
         }
     }
 }

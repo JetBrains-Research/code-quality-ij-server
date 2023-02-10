@@ -29,7 +29,8 @@ object IJCodeInspector {
         val inspectionManager = InspectionManager.getInstance(psiFile.project)
 
         ProgressManager.getInstance().executeProcessUnderProgress(
-            { problems = tool.processFile(psiFile, inspectionManager) }, DaemonProgressIndicator()
+            { problems = tool.processFile(psiFile, inspectionManager) },
+            DaemonProgressIndicator()
         )
 
         return problems ?: error("Can not get problems")
@@ -38,7 +39,7 @@ object IJCodeInspector {
     fun inspectSingleAndBuildAdaptedInspection(
         psiFile: PsiFile,
         inspection: LocalInspectionTool,
-        config: BaseIJCodeInspectorConfig,
+        config: BaseIJCodeInspectorConfig
     ) = inspectSingle(psiFile, inspection).mapNotNull {
         it.buildAdaptedInspection(inspection, config)
     }
@@ -54,14 +55,15 @@ object IJCodeInspector {
         }.flatten()
     }
 
-    fun ProblemDescriptor.buildAdaptedInspection(
+    private fun ProblemDescriptor.buildAdaptedInspection(
         inspection: LocalInspectionTool,
         config: BaseIJCodeInspectorConfig
     ): AdaptedInspection? {
         val messagesToDelete = config.inspectionIdToDisabledMessages[inspection.id]
         messagesToDelete ?: return AdaptedInspection.build(inspection, this, config)
         val message = ProblemDescriptorUtil.renderDescriptionMessage(
-            this, this.psiElement
+            this,
+            this.psiElement
         )
         return if (!messagesToDelete.any { it in message }) {
             AdaptedInspection.build(inspection, this, config, message)
