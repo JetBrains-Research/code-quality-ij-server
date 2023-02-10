@@ -130,6 +130,74 @@ Default description: `Statement seems to have no effect`
 
 </details>
 
+<details>
+  <summary>PyPep8NamingInspection</summary>
+
+Reports violations of the [PEP8](https://peps.python.org/pep-0008/) naming conventions.
+
+1. Example:
+```python
+class cls:
+    pass
+```
+
+Default description: `Class names should use CamelCase convention`
+
+2. Example:
+```python
+class A:
+    def FuNc(self):
+        pass
+```
+
+Default description: `Function name should be lowercase`
+
+3. Example:
+```python
+class A:
+    def foo(self, Arg):
+        pass
+```
+
+Default description: `Argument name should be lowercase`
+
+4. Example:
+```python
+from collections import namedtuple
+
+def f():
+    Point = namedtuple("Point", ["x1", "x2"], verbose=True)
+    Test = "foo"
+```
+
+Default description: `Variable in function should be lowercase`
+
+5. Example:
+```python
+from x import TEST as test
+```
+
+Default description: `Constant variable imported as non-constant`
+
+6. Example:
+```python
+from x import y as TEST
+```
+
+Default descriptions: `Lowercase variable imported as non-lowercase`, `CamelCase variable imported as lowercase`,
+`CamelCase variable imported as constant`
+</details>
+
+<details>
+  <summary>PyPep8Inspection</summary>
+
+Reports violations of the PEP 8 coding style guide by running the bundled [pycodestyle.py](https://github.com/PyCQA/pycodestyle) tool.
+
+Use a special config to run the tool.
+
+**TODO: add the final config**
+</details>
+
 #### Disabled issues
 
 <details>
@@ -161,3 +229,52 @@ characters and does not have an encoding declaration at the top.
 
 Default description: `Non-ASCII character ''{0}'' in the file, but no encoding declared`
 </details>
+
+<details>
+  <summary>PyOldStyleClassesInspection</summary>
+
+Reports occurrences of new-style class features in old-style classes.
+The inspection highlights `__slots__`, `__getattribute__`, and `super()` inside old-style classes.
+
+Example:
+```python
+class A:
+    def __getattribute__(self):
+        pass
+```
+
+Default descriptions: `Old-style class contains __getattribute__ definition`,
+`Old-style class contains __slots__ definition`, `Old-style class contains call for super method`
+
+</details>
+
+<details>
+  <summary>PyUnnecessaryBackslashInspection</summary>
+
+Reports backslashes in places where line continuation is implicit inside `()`, `[]`, and `{}`.
+
+Example:
+```python
+if (True \
+    or True \
+    or False):
+  print("false")
+```
+
+Default description: `Unnecessary backslash in the expression`
+</details>
+
+<details>
+  <summary>PyMandatoryEncodingInspection</summary>
+
+Reports a missing encoding comment in Python 2.
+</details>
+
+<details>
+  <summary>PyClassHasNoInitInspection</summary>
+
+Reports cases in Python 2 when a class has no ]__init__] method, neither its parent classes.
+
+Default description: `Class has no __init__ method`
+</details>
+
