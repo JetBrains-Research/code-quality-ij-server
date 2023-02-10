@@ -15,7 +15,7 @@ data class AdaptedMessage(
     }
 }
 
-abstract class BaseIJCodeInspectorConfig {
+open class BaseIJCodeInspectorConfig {
     open val ignoredInspectionIds: Set<String> = emptySet()
     open val inspectionIdToDisabledMessages: Map<String, Set<String>> = emptyMap()
     open val inspectionIdToAdaptedMessages: Map<String, Map<String, AdaptedMessage>> = emptyMap()
