@@ -313,7 +313,17 @@ class A:
 
 5) `''{0}'' is ignored if the class already defines ''{1}'' method`, `''{0}'' is ignored if the class already defines ''{1}'' parameter`
 
-**TODO: add example**
+```python
+import dataclasses
+
+
+@dataclasses.dataclass(repr=True)
+class A:
+    a: int = 1
+
+    def __repr__(self):
+        return "repr1"
+```
 
 6) `'order' should be False if the class defines one of order methods`
 
@@ -369,7 +379,19 @@ class B(A):
 
 10) `'__hash__' is ignored if the class already defines 'cmp/order' and 'frozen' parameters`
 
-**TODO: add example**
+```python
+import attr
+
+
+@attr.s(frozen=True)
+class A3:
+
+    def __hash__(self):
+        pass
+
+
+print(hash(A3()))
+```
 
 11) `Mutable default ''{0}'' is not allowed. Use ''default_factory''`
 
@@ -384,15 +406,44 @@ class A:
 
 12) `A default is set using ''{0}''`
 
-**TODO: add example**
+```python
+import attr
+
+
+@attr.s
+class AttrFactory:
+    x = attr.ib(default=attr.Factory(int))
+
+    @x.default
+    def __init_x__(self):
+        return 1
+```
 
 13) `''{0}'' should take only {1} {1,choice,1#parameter|2#parameters}`
 
-**TODO: add example**
+```python
+import attr
+
+
+@attr.s
+class A:
+    x = attr.ib()
+
+    @x.default
+    def init_x2(self, attribute, value):
+        return 10
+```
 
 14) `Attribute ''{0}'' lacks a type annotation`
 
-**TODO: add example**
+```python
+import dataclasses
+
+
+@dataclasses.dataclass
+class A1:
+    a = dataclasses.field()
+```
 
 15) `Cannot specify both 'default' and 'factory'`
 
@@ -461,11 +512,29 @@ class A:
 20) `'__attrs_post_init__' would not be called until 'init' parameter is set to True`
 `'__attrs_post_init__' should not take any parameters except 'self'`
 
-**TODO: add example**
+```python
+import attr
+
+@attr.dataclass(init=False)
+class A1:
+    x: int = 0
+
+    def __attrs_post_init__(self):
+        pass
+```
 
 21) `''{0}'' method should be called on dataclass instances or types`, `''{0}'' method should be called on dataclass instances`, `''{0}'' method should be called on attrs instances`, `''{0}'' method should be called on attrs types`
 
-**TODO: add example**
+```python
+import dataclasses
+
+
+class A:
+    pass
+
+
+dataclasses.fields(A)
+```
 </details>
 
 
@@ -587,12 +656,21 @@ Default description: `{0} {1,choice,1#is|2#are} marked as ''@final'' and should 
 
 2. Example:
 ```python
+from typing import overload
+from typing_extensions import final
 
+class B:
+    @overload
+    def foo(self, a: int) -> int: ...
+
+    @final
+    @overload
+    def foo(self, a: str) -> str: ...
 ```
 
 Default description: `'@final' should be placed on the first overload` (only for stubs)
 
-**TODO: add an example**, see - https://peps.python.org/pep-0591/
+See - https://peps.python.org/pep-0591/
 
 3. Example:
 ```python
@@ -714,10 +792,12 @@ Default description: `'Final' could not be used in annotation for a function ret
 
 11. Example:
 ```python
+from typing_extensions import Final
 
+
+class A:
+    a: Final
 ```
-
-**TODO: add an example**
 
 Default description: `If assigned value is omitted, there should be an explicit type argument to 'Final'`
 
@@ -1093,19 +1173,38 @@ Default description: `Parameter ''{0}'' unfilled`, `Parameter(s) unfilled`
 
 3. Example:
 ```python
+from typing import overload
 
+
+@overload
+def foo(value: None) -> None:
+    pass
+
+@overload
+def foo(value: int) -> str:
+    pass
+
+@overload
+def foo(value: str) -> str:
+    pass
+
+
+def foo(value):
+    return None
+
+
+foo()
 ```
-
-**TODO: add example**
 
 Default description: `Possible callees`
 
 4. Example:
 ```python
+def baddeco(): 
+    pass
 
+@baddeco
 ```
-
-**TODO: add example**
 
 Default description: `Function ''{0}'' lacks a positional argument`
 
@@ -1166,10 +1265,11 @@ Note: this inspection uses the following list of words with typos: `{"eslf", "ss
 
 3. Example:
 ```python
+class Foo(object): 
 
+  def loo((l, g), *rest):
+    pass # complain at tuple
 ```
-
-**TODO: add example**
 
 Default description: `First parameter of a non-static method must not be a tuple`
 </details>
@@ -1190,6 +1290,1143 @@ else:
 Default description: `This code is unreachable`
 </details>
 
+<details>
+  <summary>PyMethodFirstArgAssignmentInspection</summary>
+
+Reports cases when the first parameter, such as `self` or `cls`, 
+is reassigned in a method. Because in most cases, there are no objectives in such reassignment,
+class Account: def calc(self, balance): if balance == 0: self = balance return selfthe IDE indicates an error.
+
+Example:
+```python
+class Account:
+    def calc(self, balance):
+        if balance == 0:
+            self = balance
+        return self
+```
+
+Default description: `Method''s parameter ''{0}'' reassigned`
+</details>
+
+<details>
+  <summary>PyStringFormatInspection</summary>
+
+Reports errors in string formatting operations.
+
+1. Example:
+```python
+"%s %s" % {'a': 1, 'b': 2}
+```
+
+Default description: `Format does not require a mapping`
+
+2. Example:
+```python
+"Hello {a}".format()
+```
+
+Default description: `Key ''{0}'' has no corresponding argument`
+
+3. Example:
+```python
+print('%d %s cost $%.2f' % ('incorrect type', 'bananas', 1.74))
+```
+
+Default description: `Unexpected type {0}`
+
+4. Example:
+```python
+print('%(name1s' % {'name1': 'a'})
+```
+
+Default description: `Too few mapping keys`
+
+5. Example:
+```python
+val = "The percentage is 92.27"
+print("%s%" % val)
+```
+
+Default description: `Format specifier character missing`
+
+6. Example:
+```python
+print("%(name)f(name)" % 23.2)
+```
+
+Default description: `Format requires a mapping`
+
+7. Example:
+```python
+val = "The percentage is 92.27"
+print("s%%" % val)
+```
+
+Default description: `Too many arguments for format string`
+
+8. Example:
+```python
+val = "The percentage is 92.27"
+print("%s%% %s%%" % val)
+```
+
+Default description: `Too few arguments for format string`
+
+9. Example:
+```python
+print("{:,s}".format(1))
+```
+
+Default description: `The format options in chunk "{0}" are incompatible`
+
+10. Example:
+```python
+print('{:+q}; {:+f}'.format(3.14, -3.14))
+```
+
+Default description: `Unsupported format character ''{0}''`
+
+11. Example:
+```python
+print('{1} {}'.format(6, 7))
+```
+
+Default description: `Cannot switch from manual field specification to automatic field numbering`
+
+12. Example:
+```python
+print('{} {1}'.format(6, 7))
+```
+
+Default description: `Cannot switch from automatic field numbering to manual field specification`
+
+13. Example:
+```python
+print('Hello %b!' % b'World')
+```
+
+Default description: `Unsupported format character 'b'`
+
+14. Example:
+```python
+print('work%(name)*d' % (12, 32))
+```
+
+Default description: `Cannot use '*' in formats when using a mapping`
+</details>
+
+<details>
+  <summary>PyMethodOverridingInspection</summary>
+
+Reports inconsistencies in overriding method signatures.
+
+Example:
+```python
+class Book:
+    def add_title(self):
+        pass
+
+        
+class Novel(Book):
+    def add_title(self, text):
+        pass
+```
+
+Default description: `Signature of method ''{0}'' does not match signature of the base method in class ''{1}''`
+</details>
+
+<details>
+  <summary>PyInitNewSignatureInspection</summary>
+
+Reports incompatible signatures of the `__new__` and `__init__` methods.
+
+Example:
+```python
+class MyClass(object):
+    def __new__(cls, arg1):
+        return super().__new__(cls)
+
+    def __init__(self):
+        pass
+```
+
+Default descriptions: `Signature is not compatible to __init__`, `Signature is not compatible to __new__`
+</details>
+
+<details>
+  <summary>PyTrailingSemicolonInspection</summary>
+
+Reports trailing semicolons in statements.def my_func(a): c = a ** 2; return c
+
+Example:
+```python
+def my_func(a):
+    c = a ** 2;
+    return c
+```
+
+Default description: `Trailing semicolon in the statement`
+</details>
+
+<details>
+  <summary>PyReturnFromInitInspection</summary>
+
+Reports occurrences of `return` statements with a return value inside `__init__` methods of classes.
+
+Example:
+```python
+class Sum:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+        self.sum = a + b
+        return self.sum
+```
+
+Default description: `Cannot return a value from __init__`
+</details>
+
+<details>
+  <summary>PyTupleAssignmentBalanceInspection</summary>
+
+Reports cases when the number of expressions on the right-hand side and targets on 
+the left-hand side are not the same.
+
+1. Example:
+```python
+*a, b = 1, 2
+a, *b, c, *d = 1, 2, 3, 4, 5, 6
+```
+
+Default description: `Only one starred expression allowed in assignment`
+
+2. Example:
+```python
+a, b = None
+```
+
+Default description: `Need more values to unpack`
+
+3. Example:
+```python
+a, b = None, None, None
+```
+
+Default description: `Too many values to unpack`
+</details>
+
+<details>
+  <summary>PyClassicStyleClassInspection</summary>
+
+Reports classic style classes usage. This inspection applies only to Python 2.
+
+Default descriptions: `Old-style class`, `Old-style class, because all classes from whom it inherits are old-style`
+
+</details>
+
+<details>
+  <summary>PyExceptionInheritInspection</summary>
+
+Reports cases when a custom exception class is raised but does not inherit from the 
+builtin `Exception` class.
+
+Example:
+```python
+class A:
+    pass
+
+
+def me_exception():
+    raise A()
+```
+
+Default description: `Exception doesn't inherit from base 'Exception' class`
+</details>
+
+<details>
+  <summary>PyUnboundLocalVariableInspection</summary>
+
+Reports local variables referenced before assignment.
+
+1. Example:
+```python
+def foo():
+  var = "local"
+
+  def bar():
+    nonlocal var
+    print(var)
+    del var
+    print(var)
+```
+
+Default description: `Local variable ''{0}'' might be referenced before assignment`
+
+2. Example:
+```python
+def f1():
+    nonlocal x
+```
+
+Default description: `Nonlocal variable ''{0}'' must be bound in an outer function scope`
+
+3. Example:
+```python
+def foo() -> bool:
+    pass
+
+
+if foo(): 
+    b = 1
+print(b)
+```
+
+Default description: `Name ''{0}'' can be undefined`
+
+4. Default description: `Function ''{0}'' is too large to analyse`
+
+It appears if a `DFALimitExceededException` exception was thrown
+</details>
+
+
+<details>
+  <summary>PyStatementEffectInspection</summary>
+
+Reports statements that have no effect.
+
+Example:
+```python
+class Car:
+    def __init__(self, speed=0):
+        self.speed = speed
+        self.time
+```
+
+Default description: `Statement seems to have no effect`
+
+</details>
+
+<details>
+  <summary>PySuperArgumentsInspection</summary>
+
+Reports cases when any call to `super(A, B)` does not meet the following requirements:
+
+- `B` is an instance of `A`
+- `B` a subclass of `A`
+
+
+Example:
+```python
+class Figure:
+    def color(self):
+        pass
+
+
+class Rectangle(Figure):
+    def color(self):
+        pass
+
+
+class Square(Figure):
+    def color(self):
+        return super(Rectangle, self).color()
+```
+
+Default description: `'{0}'' is not an instance or a subclass of ''{1}''`
+</details>
+
+<details>
+  <summary>PyNonAsciiCharInspection</summary>
+
+Reports cases in Python 2 when a file contains non-ASCII 
+characters and does not have an encoding declaration at the top.
+
+Default description: `Non-ASCII character ''{0}'' in the file, but no encoding declared`
+</details>
+
+<details>
+  <summary>PyTupleItemAssignmentInspection</summary>
+
+Reports assignments to a tuple item.
+
+Example:
+```python
+t = ('red', 'blue', 'green', 'white')
+t[3] = 'black'
+```
+
+Default description: `Tuples don't support item assignment`
+</details>
+
+<details>
+  <summary>PyPropertyAccessInspection</summary>
+
+Reports cases when properties are accessed inappropriately:
+
+- Read-only properties are set
+- Write-only properties are read
+- Non-deletable properties are deleted
+
+1. Example:
+```python
+class A(object):
+    def s(self, v):
+        self._v = v
+
+    def g(self):
+        return self._v
+
+    def d(self):
+        pass
+
+    readonly = property(g)
+
+
+a = A()
+a.readonly += 1
+```
+
+Default description: `Property ''{0}'' cannot be set`
+
+2. Example:
+```python
+class A(object):
+    def s(self, v):
+        self._v = v
+
+    def g(self):
+        return self._v
+
+    def d(self):
+        pass
+
+    writeonly = property(None, s)
+
+
+a = A()
+a.writeonly += 1
+```
+
+Default description: `Property ''{0}'' cannot be read`
+
+3. Example:
+```python
+class A(object):
+    def s(self, v):
+        self._v = v
+
+    def g(self):
+        return self._v
+
+    def d(self):
+        pass
+
+    readonly = property(g)
+
+
+a = A()
+del a.readonly
+```
+
+Default description: `Property ''{0}'' cannot be deleted`
+</details>
+
+<details>
+  <summary>PyPropertyDefinitionInspection</summary>
+
+Reports problems with the arguments of `property()` and functions annotated with `@property`.
+
+1. Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `The doc parameter should be a string`
+
+2. Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `Strange argument; a callable is expected`
+
+3. Example:
+```python
+import abc
+
+
+class A(object):
+  def __init__(self):
+    self._x = 1
+      
+  @property
+  def boo(self):
+    return self._x
+
+  @boo.setter
+  def boo1(self, x):
+    self._x = x
+```
+
+Default description: `Names of function and decorator don't match; property accessor is not created`
+
+4. Example:
+```python
+import abc
+
+
+class A:
+    @property
+    def normal_property(self):
+        pass
+```
+
+Default description: `Getter should return or yield something`
+
+5. Example:
+```python
+import abc
+
+
+class A(object):
+  def __init__(self):
+    self._x = 1
+
+  @property
+  def moo(self):
+    pass
+
+  @moo.setter
+  def moo(self, x):
+    return 1
+```
+
+Default description: `Setter should not return a value`
+
+6. Example:
+```python
+import abc
+
+
+class A(object):
+  def __init__(self):
+    self._x = 1
+
+  @property
+  def moo(self):
+    pass
+
+  @moo.deleter
+  def moo(self):
+    return self._x
+```
+
+Default description: `Deleter should not return a value`
+
+7. Example:
+```python
+class C:
+    @property
+    def abc(self):
+        pass
+
+    @abc.getter
+    def abc(self, v1, v2): # Getter signature should be (self, value)
+        pass
+```
+
+Default description: `Getter signature should be (self)`
+
+8. Example:
+```python
+class C:
+    @property
+    def abc(self):
+        pass
+
+    @abc.setter
+    def abc(self, v1, v2): # Setter signature should be (self, value)
+        pass
+```
+
+Default description: `Setter signature should be (self, value)`
+
+9. Example:
+```python
+class C:
+    @property
+    def abc(self):
+        pass
+
+    @abc.deleter
+    def abc(self, v1): # Delete signature should be (self)
+        pass
+```
+
+Default description: `Deleter signature should be (self)`
+</details>
+
+<details>
+  <summary>PyNestedDecoratorsInspection</summary>
+
+Reports problems with nesting decorators. 
+The inspection highlights the cases when `classmethod` or `staticmethod` is applied 
+before another decorator.
+
+Example:
+```python
+def innocent(f):
+    return f
+
+class A:
+    @innocent
+    @classmethod
+    def f2(cls):
+        pass
+```
+
+Default description: `This decorator will not receive a callable it may expect; the built-in decorator returns a special object`
+</details>
+
+<details>
+  <summary>PyOldStyleClassesInspection</summary>
+
+Reports occurrences of new-style class features in old-style classes. 
+The inspection highlights `__slots__`, `__getattribute__`, and `super()` inside old-style classes.
+
+Example:
+```python
+class A:
+    def __getattribute__(self):
+        pass
+```
+
+Default descriptions: `Old-style class contains __getattribute__ definition`, 
+`Old-style class contains __slots__ definition`, `Old-style class contains call for super method`
+
+</details>
+
+<details>
+  <summary>PyCompatibilityInspection</summary>
+
+Reports incompatibility with the specified versions of Python. 
+Enable this inspection if you need your code to be compatible with a range of Python versions, 
+for example, if you are building a library.
+
+Probably we need to disable this inspection, because it includes a lot of errors, 
+but usually students don't use old features
+</details>
+
+<details>
+  <summary>PyListCreationInspection</summary>
+
+Reports cases when a list declaration can be rewritten with a list literal.
+
+Example:
+```python
+l = [1]
+l.append(2)
+```
+
+Default description: `This list creation could be rewritten as a list literal`
+</details>
+
+<details>
+  <summary>PyUnnecessaryBackslashInspection</summary>
+
+Reports backslashes in places where line continuation is implicit inside `()`, `[]`, and `{}`.
+
+Example:
+```python
+if (True \
+    or True \
+    or False):
+  print("false")
+```
+
+Default description: `Unnecessary backslash in the expression`
+</details>
+
+<details>
+  <summary>PySingleQuotedDocstringInspection</summary>
+
+Reports docstrings that do not adhere to the triple double-quoted string format.
+
+Example:
+```python
+def calc(self, balance=0):
+    'param: balance'
+    self.balance = balance
+```
+
+Default description: `Triple double-quoted strings should be used for docstrings.`
+</details>
+
+<details>
+  <summary>PyMissingConstructorInspection</summary>
+
+Reports cases when a call to the `super` constructor in a class is missed.
+
+Example:
+```python
+class Fruit:
+    def __init__(self):
+        pass
+
+        
+class Pear(Fruit):
+    def __init__(self):
+        pass
+```
+
+Default description: `Call to __init__ of super class is missed`
+</details>
+
+<details>
+  <summary>PySetFunctionToLiteralInspection</summary>
+
+Reports calls to the `set` function that can be replaced with the `set` literal.
+
+Example:
+```python
+def do_mult(a, b):
+    c = a * b
+    return set([c, a, b])
+```
+
+Default description: `Function call can be replaced with set literal`
+</details>
+
+<details>
+  <summary>PyDecoratorInspection</summary>
+
+Reports usages of `@classmethod` or `@staticmethod` decorators in methods outside a class.
+
+Example:
+```python
+class C:
+  @classmethod
+  def foo(self):
+    pass
+
+@classmethod
+def foo(self):
+  print("Constructor C was called")
+```
+
+Default description: `Decorator {0} on a method outside the class`
+</details>
+
+<details>
+  <summary>PyTypeCheckerInspection</summary>
+
+Reports type errors in function call expressions, targets, and return values. In a dynamically typed language, 
+this is possible in a limited number of cases.
+
+1. Example:
+```python
+from typing import TypedDict, List
+
+
+class Point(TypedDict):
+    x: int
+    y: int
+
+
+def a(x: List[int]) -> Point:
+    return [x]
+```
+
+Default description: `Expected type ''{0}'', got ''{1}'' instead`
+
+2. Example:
+```python
+from typing import TypedDict
+
+
+class Point(TypedDict):
+    x: int
+    y: int
+
+
+def d() -> Point:
+    return {'x': 42, 'y': 42, 'k': 42}
+```
+
+Default description: `Extra key ''{0}'' for TypedDict ''{1}''`
+
+3. Example:
+```python
+from typing import TypedDict
+
+
+class Point(TypedDict):
+    x: int
+    y: int
+
+
+def b(x: int) -> Point:
+    return {'x': 42}
+```
+
+Default description: `TypedDict ''{0}'' has missing {1,choice,1#key|2#keys}: {2}`
+
+4. Example:
+```python
+from typing import TypedDict
+
+
+class Point(TypedDict):
+    x: int
+    y: int
+
+
+def h(x) -> Point:
+    x = 42
+```
+
+Default description: `Expected to return ''{0}'', got no return`
+
+5. Example:
+```python
+class A:
+    def __init__(self) -> int:
+        pass
+```
+
+Default description: `__init__ should return None`
+
+6. Example:
+```python
+class B1(type):
+    meta_attr = "meta_attr"
+
+
+class A1(metaclass=B1):
+    pass
+
+
+def print_unknown(a):
+    print(a.unknown)
+
+
+print_unknown(A1)
+```
+
+Default description: `Type ''{0}'' doesn't have expected {1,choice,1#attribute|2#attributes} {2}`
+
+7. Default description: `Only a concrete class can be used where ''{0}'' (matched generic type ''{1}'') protocol is expected`
+
+8. Example:
+```python
+from typing import Protocol, Type
+
+
+class Proto(Protocol):
+    def proto(self, i: int) -> None:
+        pass
+
+
+def foo(cls: Type[Proto]) -> None:
+    pass
+
+
+foo(Proto)
+```
+
+Default description: `Only a concrete class can be used where ''{0}'' protocol is expected`
+
+9. Example:
+```python
+class User1(object):
+    def __init__(self, x):
+        """
+        :type x: T
+        :rtype: User1 of T
+        """
+        self.x = x
+
+    def put(self, value):
+        """
+        :type value: T
+        """
+        self.x = value
+
+
+c = User1(10)
+c.put('foo')
+```
+
+Default description: `Expected type ''{0}'' (matched generic type ''{1}''), got ''{2}'' instead`
+
+10. Example:
+```python
+import os.path
+
+
+# not os.PathLike
+class B:
+    pass
+
+
+b = B()
+
+os.fspath(b)
+```
+
+Default descriptions: `Unexpected type(s):`, `Possible type(s):`
+
+11. Example:
+```python
+
+```
+
+**TODO: add examples**
+
+Default descriptions: `Unexpected argument (from ParamSpec ''{0}'')`, `Parameter ''{0}'' unfilled (from ParamSpec ''{1}'')`
+</details>
+
+<details>
+  <summary>PyDeprecationInspection</summary>
+
+Reports usages of Python functions, or methods that are marked as deprecated 
+and raise the `DeprecationWarning` or `PendingDeprecationWarning` warning.
+
+Also, this inspection highlights usages of `abc.abstractstaticmethod`, `abc.abstractproperty`, 
+and `abc.abstractclassmethod` decorators.
+
+Example:
+```python
+class Foo:
+    @property
+    def bar(self):
+        import warnings
+        warnings.warn("this is deprecated", DeprecationWarning, 2)
+        return 5
+
+        
+foo = Foo()
+print(foo.bar)
+```
+
+Default description: `''{0}'' is deprecated since Python 3.3. Use ''{1}'' with ''{2}'' instead`, 
+`this is deprecated`
+</details>
+
+<details>
+  <summary>PyMandatoryEncodingInspection</summary>
+
+Reports a missing encoding comment in Python 2.
+</details>
+
+<details>
+  <summary>PyClassHasNoInitInspection</summary>
+
+Reports cases in Python 2 when a class has no ]__init__] method, neither its parent classes.
+
+Default description: `Class has no __init__ method`
+</details>
+
+<details>
+  <summary>PyNoneFunctionAssignmentInspection</summary>
+
+Reports cases when an assignment is done on a function that does not return anything.
+
+This inspection is similar to pylint inspection [E1111](https://docs.pylint.org/#id6).
+
+Example:
+```python
+def just_print():
+    print("Hello!")
+
+
+action = just_print()
+```
+
+Default description: `Function ''{0}'' doesn''t return anything`
+</details>
+
+<details>
+  <summary>PyProtectedMemberInspection</summary>
+
+Reports cases when a protected member is accessed outside the class, 
+a descendant of the class where it is defined, or a module.
+
+1. Example:
+```python
+class A:
+  def __init__(self):
+    self._a = 1
+
+  def foo(self):
+    self.b= 1
+
+
+print(A()._a)
+```
+
+Default descriptions: `Access to a protected member {0} of a class`, `Access to a protected member {0} of a module`
+
+2. Example:
+```python
+# File 1
+__all__ = ["m1m1"]
+
+
+def m1m1():
+    pass
+
+
+def m1m2():
+    pass
+    
+# File 2
+from m1 import m1m2
+```
+
+Default description: `'{0}'' is not declared in __all__`
+</details>
+
+
+<details>
+  <summary>PyMethodMayBeStaticInspection</summary>
+
+Reports any methods that do not require a class instance creation and can be made static.
+
+Example:
+```python
+class MyClass(object):
+    def my_method(self, x):
+        print(x)
+```
+
+Default description: `Method <code>#ref</code> may be 'static'`
+</details>
+
+<details>
+  <summary>PyDocstringTypesInspection</summary>
+
+Reports types in docstring that do not match dynamically inferred types.
+
+Example:
+```python
+
+```
+
+**TODO: add example**
+
+Default description: `Dynamically inferred type ''{0}'' doesn''t match specified type ''{1}''`
+</details>
+
+<details>
+  <summary>PyShadowingNamesInspection</summary>
+
+Reports shadowing names defined in outer scopes.
+
+Example:
+```python
+def outer(p):
+    def inner(p):
+        pass
+```
+
+Default description: `Shadows name {0} from outer scope`
+</details>
+
+<details>
+  <summary>PyAbstractClassInspection</summary>
+
+Reports cases when not all abstract properties or methods are defined in a subclass.
+
+Example:
+```python
+from abc import abstractmethod, ABC
+
+class Figure(ABC):
+    @abstractmethod
+    def do_figure(self):
+        pass
+
+class Triangle(Figure):
+    def do_triangle(self):
+        pass
+```
+
+Default description: `Class {0} must implement all abstract methods`
+</details>
+
+<details>
+  <summary>PyMissingTypeHintsInspection</summary>
+
+Arguments (by default all are `true`):
+- `m_onlyWhenTypesAreKnown` -  to check the types collected from runtime or inferred.
+
+Reports missing type hints for function declaration in one of the two formats: parameter annotations or a type comment.
+
+Default descriptions: `Type hinting is missing for a function definition`, 
+`Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
+
+</details>
+
+<details>
+  <summary>PyOverloadsInspection</summary>
+
+Reports cases when overloads in regular Python files are placed after the implementation 
+or when their signatures are not compatible with the implementation.
+
+1. Example:
+```python
+from typing import overload
+
+
+class A:
+    @overload
+    def foo(self, value: None) -> None:
+        pass
+
+    @overload
+    def foo(self, value: int) -> str:
+        pass
+
+    def foo(self, value):
+        return None
+
+    @overload
+    def foo(self, value: str) -> str:
+        pass
+```
+
+Default descriptions: `A series of @overload-decorated methods should always be followed by an implementation that is not @overload-ed`,
+`A series of @overload-decorated functions should always be followed by an implementation that is not @overload-ed`
+
+2. Example:
+```python
+from typing import overload
+
+
+class A:
+    @overload
+    def foo(self) -> None:
+        pass
+
+    @overload
+    def foo(self, value: str) -> str:
+        pass
+
+    def foo(self, value):
+        return None
+```
+
+Default descriptions: `Signature of this @overload-decorated method is not compatible with the implementation`,
+`Signature of this @overload-decorated function is not compatible with the implementation`
+
+</details>
+
 
 <details>
   <summary></summary>
@@ -1202,43 +2439,6 @@ Example:
 Default description: ``
 </details>
 
-- PyMethodFirstArgAssignmentInspection
-- PyStringFormatInspection
-- PyMethodOverridingInspection
-- PyInitNewSignatureInspection
-- PyTrailingSemicolonInspection
-- PyReturnFromInitInspection
-- PyTupleAssignmentBalanceInspection
-- PyClassicStyleClassInspection
-- PyExceptionInheritInspection
-- PyUnboundLocalVariableInspection
-- PyStatementEffectInspection
-- PySuperArgumentsInspection
-- PyNonAsciiCharInspection
-- PyTupleItemAssignmentInspection
-- PyPropertyAccessInspection
-- PyPropertyDefinitionInspection
-- PyNestedDecoratorsInspection
-- PyOldStyleClassesInspection
-- PyCompatibilityInspection
-- PyListCreationInspection
-- PyUnnecessaryBackslashInspection
-- PySingleQuotedDocstringInspection
-- PyMissingConstructorInspection
-- PySetFunctionToLiteralInspection
-- PyDecoratorInspection
-- PyTypeCheckerInspection
-- PyDeprecationInspection
-- PyMandatoryEncodingInspection
-- PyClassHasNoInitInspection
-- PyNoneFunctionAssignmentInspection
-- PyProtectedMemberInspection
-- PyMethodMayBeStaticInspection
-- PyDocstringTypesInspection
-- PyShadowingNamesInspection
-- PyAbstractClassInspection
-- PyMissingTypeHintsInspection
-- PyOverloadsInspection
 - PyProtocolInspection
 - PyTypeHintsInspection
 - PyTypedDictInspection
