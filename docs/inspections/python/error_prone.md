@@ -162,7 +162,6 @@ except UnicodeError:
 Default description: `''{0}'', superclass of the exception class ''{1}'', has already been caught`
 </details>
 
-**TODO: separate PyFinalInspection inside Hypertsyle??**
 <details>
   <summary>PyFinalInspection</summary>
 
@@ -200,7 +199,7 @@ class B:
     def foo(self, a: str) -> str: ...
 ```
 
-Default description: `'@final' should be placed on the first overload` (only for stubs)
+Default description: `'@final' should be placed on the implementation` (only for stubs)
 
 See - https://peps.python.org/pep-0591/
 
