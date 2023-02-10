@@ -39,6 +39,7 @@ class IJCodeInspectorConfigAdaptMessageTest : BasePlatformTestCase() {
     }
 
     companion object {
+        @Suppress("ForbiddenComment")
         @JvmStatic
         @Parameterized.Parameters(name = "Inspection id: {0}, code: {1}")
         fun getTestData() = listOf(
