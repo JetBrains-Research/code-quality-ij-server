@@ -40,6 +40,7 @@ a = a + b
 ```
 
 Default description: `Assignment can be replaced with an augmented assignment`
+Adapted hint: `Assignment can be replaced with an augmented assignment, e.g 'a = a + b' is the same with 'a += b'`
 </details>
 
 <details>
@@ -111,6 +112,7 @@ def my_func(a):
 ```
 
 Default description: `Trailing semicolon in the statement`
+Adapted message: `You don't need to use a semicolon here`
 </details>
 
 <details>
@@ -127,6 +129,7 @@ class Car:
 ```
 
 Default description: `Statement seems to have no effect`
+Adapted description: `You can delete this statement since it has no effect`
 
 </details>
 
@@ -172,6 +175,7 @@ def f():
 
 Default description: `Variable in function should be lowercase`
 
+DISABLE
 5. Example:
 ```python
 from x import TEST as test
@@ -179,6 +183,7 @@ from x import TEST as test
 
 Default description: `Constant variable imported as non-constant`
 
+DISABLE
 6. Example:
 ```python
 from x import y as TEST

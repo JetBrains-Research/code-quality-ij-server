@@ -160,6 +160,29 @@ def do_comparison(x):
                 """.trimIndent(),
                 "Simplify chained comparison",
                 null
+            ),
+
+            // CODE_STYLE
+            arrayOf(
+                "PyTrailingSemicolon",
+                """
+def my_func(a):
+    c = a ** 2;
+    return c
+                """.trimIndent(),
+                "Trailing semicolon in the statement",
+                null
+            ),
+            arrayOf(
+                "PyStatementEffect",
+                """
+class Car:
+    def __init__(self, speed=0):
+        self.speed = speed
+        self.time
+                """.trimIndent(),
+                "Statement seems to have no effect",
+                null
             )
 
         )
