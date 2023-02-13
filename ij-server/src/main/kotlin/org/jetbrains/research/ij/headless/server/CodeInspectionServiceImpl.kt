@@ -1,9 +1,9 @@
 package org.jetbrains.research.ij.headless.server
 
-import com.intellij.codeInspection.ProblemDescriptorUtil
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
+import org.jetbrains.research.ij.headless.server.inspector.IJCodeInspector
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
@@ -25,24 +25,17 @@ class CodeInspectionServiceImpl(templatesPath: Path) :
         val response = AtomicReference<InspectionResult>()
 
         ApplicationManager.getApplication().invokeAndWait {
-            val result = IJCodeInspector.inspect(file)
+            val inspections = IJCodeInspector.inspect(file)
             response.set(
                 InspectionResult.newBuilder().addAllProblems(
-                    result.flatMap { (inspection, descriptors) ->
-                        descriptors.map { descriptor ->
-                            Problem.newBuilder()
-                                .setName(
-                                    ProblemDescriptorUtil.renderDescriptionMessage(
-                                        descriptor,
-                                        descriptor.psiElement
-                                    )
-                                )
-                                .setInspector(inspection.shortName)
-                                .setLineNumber(descriptor.lineNumber.toLong())
-                                .setOffset(descriptor.psiElement?.textOffset?.toLong() ?: -1L)
-                                .setLength(descriptor.psiElement?.textLength?.toLong() ?: -1L)
-                                .build()
-                        }
+                    inspections.map { inspection ->
+                        Problem.newBuilder()
+                            .setName(inspection.description)
+                            .setInspector(inspection.inspector)
+                            .setLineNumber(inspection.lineNumber)
+                            .setOffset(inspection.offset)
+                            .setLength(inspection.length)
+                            .build()
                     }
                 ).build()
             )

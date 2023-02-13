@@ -1,4 +1,4 @@
-## Best practice inspections
+~~## Best practice inspections
 
 #### General definition
 
@@ -51,6 +51,7 @@ if b != False:
 ```
 
 Default description: `Expression can be simplified`
+New description: `Expression can be simplified, e.g. "if a != False:" is the same with "if a:"`
 </details>
 
 <details>
@@ -68,6 +69,7 @@ my_function(2)
 ```
 
 Default description: `Argument equals to the default parameter value`
+New description: `Argument equals to the default parameter value. You can delete the argument, the default parameter value will be used automatically.`
 </details>
 
 <details>
@@ -113,9 +115,8 @@ except:
 ```
 
 Default description: `Too broad exception clause`
+New description: `Please, specify the exception type, but avoid using too general exception "Exception"`
 </details>
-
-**TODO: separate PyDataclassInspection inside Hypertsyle??**
 
 <details>
   <summary>PyDataclassInspection</summary>
@@ -126,6 +127,7 @@ Examples with default descriptions:
 
 **ERROR-PRONE**
 1) `''{0}'' not supported between instances of ''{1}''`
+New description: `''{0}'' not supported between instances of ''{1}''. You should add parameters into "dataclass" decorator: @dataclass(order=True).`
 ```python
 from dataclasses import dataclass
 
@@ -143,6 +145,8 @@ See [pep-0557](https://peps.python.org/pep-0557), the `order` block
 
 **ERROR-PRONE**
 2) `''{0}'' object could have no attribute ''{1}'' because it is declared as init-only`
+Adapted description: `''{0}'' object could have no attribute ''{1}'' because it is declared as init-only. Please, don't call this attribute.`
+
 ```python
 from __future__ import annotations
 from dataclasses import dataclass, InitVar
@@ -207,6 +211,7 @@ class A:
 
 **ERROR-PRONE**
 6) `'order' should be False if the class defines one of order methods`
+Adapted message: `'order' should be False if the class defines one of order methods: : __le__, __lt__, __gt__, __ge__`
 
 ```python
 from dataclasses import dataclass
@@ -280,6 +285,7 @@ print(hash(A3()))
 
 **ERROR-PRONE**
 11) `Mutable default ''{0}'' is not allowed. Use ''default_factory''`
+Adapted hint: `Mutable default ''{0}'' is not allowed. Use ''default_factory'', e.g. 'a: list = field(default_factory=list)'`
 
 ```python
 from dataclasses import dataclass
@@ -445,6 +451,7 @@ dic['var'] = 1
 ```
 
 Default description: `This dictionary creation could be rewritten as a dictionary literal`
+Adapted message: `This dictionary creation could be rewritten as a dictionary literal, e.g. dic = {'var': 1}`
 </details>
 
 <details>
@@ -494,6 +501,7 @@ l.append(2)
 ```
 
 Default description: `This list creation could be rewritten as a list literal`
+Adapted message: `This list creation could be rewritten as a list literal, e.g. l = [1, 2]`
 </details>
 
 <details>
@@ -509,6 +517,7 @@ def do_mult(a, b):
 ```
 
 Default description: `Function call can be replaced with set literal`
+Adapted message: `Function call can be replaced with set literal, e.g. set([c, a, b]) is the same with {c, a, b}`
 </details>
 
 <details>
@@ -531,7 +540,9 @@ print(A()._a)
 ```
 
 Default descriptions: `Access to a protected member {0} of a class`, `Access to a protected member {0} of a module`
+Adapted description: `Access to a protected member {0} of a class is not recommended`, `Access to a protected member {0} of a module is not recommended`
 
+DISABLE
 2. Example:
 ```python
 # File 1
@@ -565,6 +576,7 @@ class MyClass(object):
 ```
 
 Default description: `Method <code>#ref</code> may be 'static'`
+Adapted message: `Method <code>#ref</code> may be 'static', because you don't use any properties of the class`
 </details>
 
 <details>
@@ -582,6 +594,7 @@ def do_comparison(x):
 ```
 
 Default description: `Simplify chained comparison`
+Adapted message: `Simplify chained comparison, , e.g 'if x >= a and x <= b:' is the same with 'a <= x <= b'`
 </details>
 
 #### Disabled issues
@@ -680,4 +693,4 @@ Reports missing type hints for function declaration in one of the two formats: p
 Default descriptions: `Type hinting is missing for a function definition`,
 `Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
 
-</details>
+</details>~~
