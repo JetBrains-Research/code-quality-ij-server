@@ -39,7 +39,7 @@ class IJCodeInspectorConfigAdaptMessageTest : BasePlatformTestCase() {
     }
 
     companion object {
-        @Suppress("ForbiddenComment")
+        @Suppress("ForbiddenComment", "LongMethod")
         @JvmStatic
         @Parameterized.Parameters(name = "Inspection id: {0}, code: {1}")
         fun getTestData() = listOf(
@@ -99,32 +99,131 @@ print(a < b)
                 """.trimIndent(),
                 "not supported between instances of",
                 "'__lt__' not supported between instances of 'A'"
-            )
+            ),
 
-            // TODO: Does not work in tests, but works in general
-//            arrayOf(
-//                "PyDataclass",
-//                """
-// from __future__ import annotations
-// from dataclasses import dataclass, InitVar
-//
-//
-// @dataclass
-// class C:
-//    i: int
-//    init_only: InitVar[int | None] = None
-//
-//    def __post_init__(self, init_only):
-//        if self.i is None and init_only is not None:
-//            self.i = init_only
-//
-//
-// c = C(10, init_only=5)
-// print(c.init_only)
-//                """.trimIndent(),
-//                "because it is declared as init-only",
-//                "'C' object could have no attribute 'init_only' because it is declared as init-only"
-//            )
+            arrayOf(
+                "PyDictCreation",
+                """
+dic = {}
+dic['var'] = 1
+                """.trimIndent(),
+                "This dictionary creation could be rewritten as a dictionary literal",
+                null
+            ),
+
+            arrayOf(
+                "PyListCreation",
+                """
+l = [1]
+l.append(2)
+                """.trimIndent(),
+                "This list creation could be rewritten as a list literal",
+                null
+            ),
+
+            arrayOf(
+                "PyProtectedMember",
+                """
+class A:
+  def __init__(self):
+    self._a = 1
+
+  def foo(self):
+    self.b= 1
+
+
+print(A()._a)
+                """.trimIndent(),
+                "Access to a protected member ",
+                "Access to a protected member _a of a class"
+            ),
+
+            arrayOf(
+                "PyMethodMayBeStatic",
+                """
+class MyClass(object):
+    def my_method(self, x):
+        print(x)
+                """.trimIndent(),
+                " may be 'static'",
+                "Method 'my_method' may be 'static'"
+            ),
+
+            arrayOf(
+                "PyChainedComparisons",
+                """
+def do_comparison(x):
+    xmin = 10
+    xmax = 100
+    if x >= xmin and x <= xmax:
+        pass
+                """.trimIndent(),
+                "Simplify chained comparison",
+                null
+            ),
+
+            // CODE_STYLE
+            arrayOf(
+                "PyTrailingSemicolon",
+                """
+def my_func(a):
+    c = a ** 2;
+    return c
+                """.trimIndent(),
+                "Trailing semicolon in the statement",
+                null
+            ),
+            arrayOf(
+                "PyStatementEffect",
+                """
+class Car:
+    def __init__(self, speed=0):
+        self.speed = speed
+        self.time
+                """.trimIndent(),
+                "Statement seems to have no effect",
+                null
+            ),
+
+            // ERROR_PRONE
+            arrayOf(
+                "PyComparisonWithNone",
+                """
+a = 2
+if a == None:
+    print("Success")
+                """.trimIndent(),
+                "Comparison with None performed with equality operators",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar(5, "#")
+                """.trimIndent(),
+                "Unexpected argument",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar.__call__()
+                """.trimIndent(),
+                " unfilled",
+                "Parameter 'p1' unfilled"
+            )
         )
     }
 }
