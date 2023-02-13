@@ -43,6 +43,9 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
             "A default is set using",
             "should take only"
         ),
+        "PyProtectedMember" to setOf(
+            "is not declared in __all__"
+        ),
 
         // COMPLEXITY
 
@@ -78,6 +81,46 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
             ),
             "because it is declared as init-only" to AdaptedMessage(
                 suffix = ". Please, don't call this attribute."
+            ),
+            "'order' should be False if the class defines one of order methods" to AdaptedMessage(
+                suffix = ": __le__, __lt__, __gt__, __ge__"
+            ),
+            " is not allowed. Use 'default_factory'" to AdaptedMessage(
+                suffix = ", e.g. 'a: list = field(default_factory=list)'"
+            )
+        ),
+        "PyDictCreation" to mapOf(
+            "This dictionary creation could be rewritten as a dictionary literal" to AdaptedMessage(
+                suffix = ", e.g. dic = {'var': 1}"
+            )
+        ),
+        "PyListCreation" to mapOf(
+            "This list creation could be rewritten as a list literal" to AdaptedMessage(
+                suffix = ", e.g. l = [1, 2]"
+            )
+        ),
+
+        "PySetFunctionToLiteral" to mapOf(
+            "Function call can be replaced with set literal" to AdaptedMessage(
+                suffix = ", e.g. set([c, a, b]) is the same with {c, a, b}"
+            )
+        ),
+
+        "PyProtectedMember" to mapOf(
+            "Access to a protected member " to AdaptedMessage(
+                suffix = " is not recommended"
+            )
+        ),
+
+        "PyMethodMayBeStatic" to mapOf(
+            " may be 'static'" to AdaptedMessage(
+                suffix = ", because you don't use any properties of the class"
+            )
+        ),
+
+        "PyChainedComparisons" to mapOf(
+            "Simplify chained comparison" to AdaptedMessage(
+                suffix = ", e.g 'if x >= a and x <= b:' is the same with 'a <= x <= b'"
             )
         )
     )

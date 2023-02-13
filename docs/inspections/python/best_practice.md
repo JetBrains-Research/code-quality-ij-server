@@ -211,6 +211,7 @@ class A:
 
 **ERROR-PRONE**
 6) `'order' should be False if the class defines one of order methods`
+Adapted message: `'order' should be False if the class defines one of order methods: : __le__, __lt__, __gt__, __ge__`
 
 ```python
 from dataclasses import dataclass
@@ -284,6 +285,7 @@ print(hash(A3()))
 
 **ERROR-PRONE**
 11) `Mutable default ''{0}'' is not allowed. Use ''default_factory''`
+Adapted hint: `Mutable default ''{0}'' is not allowed. Use ''default_factory'', e.g. 'a: list = field(default_factory=list)'`
 
 ```python
 from dataclasses import dataclass
@@ -449,6 +451,7 @@ dic['var'] = 1
 ```
 
 Default description: `This dictionary creation could be rewritten as a dictionary literal`
+Adapted message: `This dictionary creation could be rewritten as a dictionary literal, e.g. dic = {'var': 1}`
 </details>
 
 <details>
@@ -498,6 +501,7 @@ l.append(2)
 ```
 
 Default description: `This list creation could be rewritten as a list literal`
+Adapted message: `This list creation could be rewritten as a list literal, e.g. l = [1, 2]`
 </details>
 
 <details>
@@ -513,6 +517,7 @@ def do_mult(a, b):
 ```
 
 Default description: `Function call can be replaced with set literal`
+Adapted message: `Function call can be replaced with set literal, e.g. set([c, a, b]) is the same with {c, a, b}`
 </details>
 
 <details>
@@ -535,7 +540,9 @@ print(A()._a)
 ```
 
 Default descriptions: `Access to a protected member {0} of a class`, `Access to a protected member {0} of a module`
+Adapted description: `Access to a protected member {0} of a class is not recommended`, `Access to a protected member {0} of a module is not recommended`
 
+DISABLE
 2. Example:
 ```python
 # File 1
@@ -569,6 +576,7 @@ class MyClass(object):
 ```
 
 Default description: `Method <code>#ref</code> may be 'static'`
+Adapted message: `Method <code>#ref</code> may be 'static', because you don't use any properties of the class`
 </details>
 
 <details>
@@ -586,6 +594,7 @@ def do_comparison(x):
 ```
 
 Default description: `Simplify chained comparison`
+Adapted message: `Simplify chained comparison, , e.g 'if x >= a and x <= b:' is the same with 'a <= x <= b'`
 </details>
 
 #### Disabled issues
