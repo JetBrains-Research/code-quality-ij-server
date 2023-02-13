@@ -147,6 +147,31 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
                 toReuseDescription = false,
                 prefix = "You can delete this statement since it has no effect"
             )
+        ),
+
+        // ERROR_PRONE
+        "PyDefaultArgument" to mapOf(
+            "Default argument value is mutable" to AdaptedMessage(
+                suffix = ", replace with None or any immutable type"
+            )
+        ),
+        "PyCallingNonCallable" to mapOf(
+            " is not callable" to AdaptedMessage(
+                suffix = ", you cannot use ()"
+            )
+        ),
+        "PyComparisonWithNone" to mapOf(
+            "Comparison with None performed with equality operators" to AdaptedMessage(
+                suffix = ": replace '==' to 'is' or '!=' to 'is not'"
+            )
+        ),
+        "PyArgumentList" to mapOf(
+            "Unexpected argument" to AdaptedMessage(
+                suffix = ": check the number of arguments and their types"
+            ),
+            " unfilled" to AdaptedMessage(
+                suffix = ". Specify a default value or fill a value"
+            )
         )
     )
 }

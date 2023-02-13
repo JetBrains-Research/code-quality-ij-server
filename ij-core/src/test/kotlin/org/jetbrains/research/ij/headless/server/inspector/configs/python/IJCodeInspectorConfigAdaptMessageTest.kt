@@ -183,8 +183,47 @@ class Car:
                 """.trimIndent(),
                 "Statement seems to have no effect",
                 null
-            )
+            ),
 
+            // ERROR_PRONE
+            arrayOf(
+                "PyComparisonWithNone",
+                """
+a = 2
+if a == None:
+    print("Success")
+                """.trimIndent(),
+                "Comparison with None performed with equality operators",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar(5, "#")
+                """.trimIndent(),
+                "Unexpected argument",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar.__call__()
+                """.trimIndent(),
+                " unfilled",
+                "Parameter 'p1' unfilled"
+            )
         )
     }
 }
