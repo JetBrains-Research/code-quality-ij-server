@@ -23,6 +23,7 @@ def f(args=[]):
 ```
 
 Default description: `Default argument value is mutable`
+Adapted description: `Default argument value is mutable, replace with None or any immutable type`
 </details>
 
 <details>
@@ -90,6 +91,11 @@ Default descriptions:
 - For objects: `'{0}'' object is not callable`
 - For other cases: `''{0}'' is not callable`
 - For expressions: `Expression is not callable`
+
+Adapted descriptions:
+- For objects: `'{0}'' object is not callable, you cannot use ()`
+- For other cases: `''{0}'' is not callable, you cannot use ()`
+- For expressions: `Expression is not callable, you cannot use ()`
 </details>
 
 <details>
@@ -106,6 +112,7 @@ if a == None:
 ```
 
 Default description: `Comparison with None performed with equality operators`
+Adapted description: `Comparison with None performed with equality operators: replace '==' to 'is' or '!=' to 'is not'`
 </details>
 
 <details>
@@ -222,7 +229,7 @@ class Demo(Dummy):
 
 Default description: `''{0}'' is marked as ''@final'' and should not be overridden`
 
-**BEST PRACTICE**
+**BEST PRACTICE**, DISABLE
 4. Example:
 ```python
 from typing import overload, final
@@ -496,6 +503,7 @@ bar(5, "#")
 ```
 
 Default description: `Unexpected argument`, `Unexpected argument(s)`
+Adapted description: `Unexpected argument: check the number of arguments and their types`, `Unexpected argument(s): check the number of arguments and their types`
 
 2. Example:
 ```python
@@ -509,6 +517,7 @@ bar.__call__()
 ```
 
 Default description: `Parameter ''{0}'' unfilled`, `Parameter(s) unfilled`
+Adapted description: `Parameter ''{0}'' unfilled: specify a default value or fill a value`, `Parameter(s) unfilled: specify a default value or fill a value`
 
 3. Example:
 ```python

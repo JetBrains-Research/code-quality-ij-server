@@ -160,8 +160,70 @@ def do_comparison(x):
                 """.trimIndent(),
                 "Simplify chained comparison",
                 null
-            )
+            ),
 
+            // CODE_STYLE
+            arrayOf(
+                "PyTrailingSemicolon",
+                """
+def my_func(a):
+    c = a ** 2;
+    return c
+                """.trimIndent(),
+                "Trailing semicolon in the statement",
+                null
+            ),
+            arrayOf(
+                "PyStatementEffect",
+                """
+class Car:
+    def __init__(self, speed=0):
+        self.speed = speed
+        self.time
+                """.trimIndent(),
+                "Statement seems to have no effect",
+                null
+            ),
+
+            // ERROR_PRONE
+            arrayOf(
+                "PyComparisonWithNone",
+                """
+a = 2
+if a == None:
+    print("Success")
+                """.trimIndent(),
+                "Comparison with None performed with equality operators",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar(5, "#")
+                """.trimIndent(),
+                "Unexpected argument",
+                null
+            ),
+            arrayOf(
+                "PyArgumentList",
+                """
+class Foo:
+    def __call__(self, p1: int, *, p2: str = "%"):
+        return p2 * p1
+
+
+bar = Foo()
+bar.__call__()
+                """.trimIndent(),
+                " unfilled",
+                "Parameter 'p1' unfilled"
+            )
         )
     }
 }

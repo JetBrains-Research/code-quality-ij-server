@@ -52,9 +52,15 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
         // ERROR_PRONE
         "PyFinal" to setOf(
             "'@final' should be placed on the implementation"
-        )
+        ),
 
         // CODE_STYLE
+        "PyPep8Naming" to setOf(
+            "Constant variable imported as non-constant",
+            "Lowercase variable imported as non-lowercase",
+            "CamelCase variable imported as lowercase",
+            "CamelCase variable imported as constant"
+        )
     )
 
     override val inspectionIdToAdaptedMessages: Map<String, Map<String, AdaptedMessage>> = mapOf(
@@ -121,6 +127,50 @@ object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
         "PyChainedComparisons" to mapOf(
             "Simplify chained comparison" to AdaptedMessage(
                 suffix = ", e.g 'if x >= a and x <= b:' is the same with 'a <= x <= b'"
+            )
+        ),
+
+        // CODE_STYLE
+        "PyAugmentAssignment" to mapOf(
+            "Assignment can be replaced with an augmented assignment" to AdaptedMessage(
+                suffix = ", e.g 'a = a + b' is the same with 'a += b'"
+            )
+        ),
+        "PyTrailingSemicolon" to mapOf(
+            "Trailing semicolon in the statement" to AdaptedMessage(
+                toReuseDescription = false,
+                prefix = "You don't need to use a semicolon here"
+            )
+        ),
+        "PyStatementEffect" to mapOf(
+            "Statement seems to have no effect" to AdaptedMessage(
+                toReuseDescription = false,
+                prefix = "You can delete this statement since it has no effect"
+            )
+        ),
+
+        // ERROR_PRONE
+        "PyDefaultArgument" to mapOf(
+            "Default argument value is mutable" to AdaptedMessage(
+                suffix = ", replace with None or any immutable type"
+            )
+        ),
+        "PyCallingNonCallable" to mapOf(
+            " is not callable" to AdaptedMessage(
+                suffix = ", you cannot use ()"
+            )
+        ),
+        "PyComparisonWithNone" to mapOf(
+            "Comparison with None performed with equality operators" to AdaptedMessage(
+                suffix = ": replace '==' to 'is' or '!=' to 'is not'"
+            )
+        ),
+        "PyArgumentList" to mapOf(
+            "Unexpected argument" to AdaptedMessage(
+                suffix = ": check the number of arguments and their types"
+            ),
+            " unfilled" to AdaptedMessage(
+                suffix = ". Specify a default value or fill a value"
             )
         )
     )
