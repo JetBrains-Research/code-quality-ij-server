@@ -18,10 +18,22 @@ job("Publish to Docker Hub") {
         }
 
         dockerBuildPush {
-            val spaceRepo = "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server"
+            val spaceRepo =
+                "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server"
             tags {
                 +"$spaceRepo:1.0.${"$"}JB_SPACE_EXECUTION_NUMBER"
             }
+        }
+    }
+}
+
+job("Build and run tests") {
+    container(
+        displayName = "Gradle build and run tests",
+        image = "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server"
+    ) {
+        kotlinScript { api ->
+            api.gradlew("build --stacktrace -PrunDetekt -x test")
         }
     }
 }
