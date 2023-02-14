@@ -1,11 +1,11 @@
 job("Publish to Docker Hub") {
     host("Build artifacts and a Docker image") {
-        env["HUB_USER"] = Secrets("DOCKER_USER")
-        env["HUB_TOKEN"] = Secrets("DOCKER_PASSWORD")
+        env["DOCKER_USER"] = Secrets("DOCKER_USER")
+        env["DOCKER_PASSWORD"] = Secrets("DOCKER_PASSWORD")
 
         shellScript {
             content = """
-                docker login --username ${'$'}HUB_USER --password "${'$'}HUB_TOKEN"
+                docker login registry.jetbrains.team --username ${'$'}DOCKER_USER --password "${'$'}DOCKER_PASSWORD"
             """
         }
 
