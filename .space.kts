@@ -1,11 +1,11 @@
 job("Publish to Docker Hub") {
-//    startOn {
-//        gitPush {
-//            branchFilter {
-//                +"refs/heads/master"
-//            }
-//        }
-//    }
+    startOn {
+        gitPush {
+            branchFilter {
+                +"refs/heads/master"
+            }
+        }
+    }
 
     host("Build artifacts and a Docker image") {
         env["DOCKER_USER"] = Secrets("DOCKER_USER")
