@@ -11,7 +11,8 @@ grpc = "1.31.1"
 grpc-kotlin = "0.2.0"
 protobuf = "3.19.4"
 protobuf-plugin = "0.8.13"
-plugin-utilities = "2.0.1"
+# publish test module for 2.0.1
+plugin-utilities = "2.0"
 detekt = "1.21.0"
 
 [libraries]
