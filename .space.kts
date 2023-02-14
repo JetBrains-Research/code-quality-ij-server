@@ -1,11 +1,11 @@
 job("Publish to Docker Hub") {
-    startOn {
-        gitPush {
-            branchFilter {
-                +"refs/heads/master"
-            }
-        }
-    }
+//    startOn {
+//        gitPush {
+//            branchFilter {
+//                +"refs/heads/master"
+//            }
+//        }
+//    }
 
     host("Build artifacts and a Docker image") {
         env["DOCKER_USER"] = Secrets("DOCKER_USER")
@@ -22,6 +22,7 @@ job("Publish to Docker Hub") {
                 "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server"
             tags {
                 +"$spaceRepo:1.0.${"$"}JB_SPACE_EXECUTION_NUMBER"
+                +"$spaceRepo:latest"
             }
         }
     }
@@ -30,7 +31,7 @@ job("Publish to Docker Hub") {
 job("Build and run tests") {
     container(
         displayName = "Gradle build and run tests",
-        image = "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server"
+        image = "registry.jetbrains.team/p/code-quality-for-online-learning-platforms/containers/code-quality-ij-server:latest"
     ) {
         kotlinScript { api ->
             api.gradlew("build --stacktrace -PrunDetekt -x test")
