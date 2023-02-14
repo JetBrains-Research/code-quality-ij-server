@@ -1,12 +1,12 @@
 ## Code style inspections
 
-#### General definition
+### General definition
 
 **Code style** issue means that your code violates one of the rules recorded in the style guide 
 for the language you’re using. It is highly recommended to fix such issues 
 so that your code style matches that of other developers.
 
-#### Enabled issues
+### Enabled issues
 
 <details>
   <summary>PyRedundantParenthesesInspection</summary>
@@ -75,7 +75,7 @@ Note: this inspection uses the following list of words with typos: `{"eslf", "ss
 ```python
 class Foo(object): 
 
-  def loo((l, g), *rest):
+  def loo((f, g), *rest):
     pass # complain at tuple
 ```
 
@@ -203,7 +203,7 @@ Use a special config to run the tool.
 **TODO: add the final config**
 </details>
 
-#### Disabled issues
+### Disabled issues
 
 <details>
   <summary>PyInconsistentIndentationInspection</summary>

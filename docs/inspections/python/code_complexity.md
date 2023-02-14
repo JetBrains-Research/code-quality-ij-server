@@ -1,6 +1,6 @@
 ## Code complexity inspections
 
-#### General definition
+### General definition
 
 Code complexity issue means that your solution is poorly designed or overly complicated. 
 Reducing code complexity makes it easier to understand, edit, 
@@ -9,7 +9,7 @@ High code complexity means that some part of your program contains too many cond
 loops, logical operators; in other words, it does too many things. 
 To fix this issue, you need to decompose your code into several smaller parts.
 
-#### Enabled issues
+### Enabled issues
 
-#### Disabled issues
+### Disabled issues
 

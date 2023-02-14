@@ -1,12 +1,12 @@
 ## Error-prone inspections
 
-#### General definition
+### General definition
 
 **Error-prone** issue means that your code contains a potential bug. 
 Even if your code passes our automatic tests, it may behave incorrectly in some cases, 
 which would be a problem in a real project. You should always fix such issues in your solutions.
 
-#### Enabled issues
+### Enabled issues
 
 <details>
   <summary>PyDefaultArgumentInspection</summary>
@@ -2090,7 +2090,7 @@ Default description: `Class ''{0}'' does not define ''{1}'', so the ''{2}'' oper
 Default description: `Function ''{0}'' does not have a parameter ''{1}''`
 </details>
 
-#### Disabled issues
+### Disabled issues
 
 <details>
   <summary>PyDunderSlotsInspection</summary>

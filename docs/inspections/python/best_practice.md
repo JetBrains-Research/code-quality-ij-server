@@ -1,13 +1,14 @@
-~~## Best practice inspections
+## Best practice inspections
 
-#### General definition
+### General definition
+
 
 **Best practice** issue means that your code does not follow the 
 widely accepted recommendations and idioms of the language you’re using. 
 Some features of the language can be used in an inefficient or obsolete way. 
 Such errors are not critical but the fewer of them, the better.
 
-#### Enabled issues
+### Enabled issues
 
 <details>
   <summary>PyUnusedLocalInspection</summary>
@@ -496,12 +497,12 @@ Reports cases when a list declaration can be rewritten with a list literal.
 
 Example:
 ```python
-l = [1]
-l.append(2)
+arr = [1]
+arr.append(2)
 ```
 
 Default description: `This list creation could be rewritten as a list literal`
-Adapted message: `This list creation could be rewritten as a list literal, e.g. l = [1, 2]`
+Adapted message: `This list creation could be rewritten as a list literal, e.g. arr = [1, 2]`
 </details>
 
 <details>
@@ -597,7 +598,7 @@ Default description: `Simplify chained comparison`
 Adapted message: `Simplify chained comparison, , e.g 'if x >= a and x <= b:' is the same with 'a <= x <= b'`
 </details>
 
-#### Disabled issues
+### Disabled issues
 
 <details>
   <summary>PyIncorrectDocstringInspection</summary>
@@ -674,10 +675,16 @@ Reports types in docstring that do not match dynamically inferred types.
 
 Example:
 ```python
+def foo(a):
+    """ 
+    @param a: 
+    @type a: str
+    @return: 
+    """
+    pass
 
+print(foo(3))
 ```
-
-**TODO: add example**
 
 Default description: `Dynamically inferred type ''{0}'' doesn''t match specified type ''{1}''`
 </details>
@@ -693,4 +700,4 @@ Reports missing type hints for function declaration in one of the two formats: p
 Default descriptions: `Type hinting is missing for a function definition`,
 `Add type hints`, `Add type hints for ''{0}''`, `Only when types are known (collected from run-time or inferred)`
 
-</details>~~
+</details>
