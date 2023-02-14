@@ -114,8 +114,8 @@ dic['var'] = 1
             arrayOf(
                 "PyListCreation",
                 """
-l = [1]
-l.append(2)
+arr = [1]
+arr.append(2)
                 """.trimIndent(),
                 "This list creation could be rewritten as a list literal",
                 null
