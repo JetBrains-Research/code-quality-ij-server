@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiFile
 import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonPep8AnnotatorConfig
 
-object AnnotatorInspector: Inspector {
+object AnnotatorInspector : Inspector {
     private val logger = Logger.getInstance(javaClass)
 
     private fun getAnnotatorConfigs(language: Language) = when (language.id) {
