@@ -5,7 +5,6 @@ import com.jetbrains.python.PythonLanguage
 import org.jetbrains.research.ij.headless.server.inspector.AdaptedInspection
 import org.jetbrains.research.ij.headless.server.inspector.IJCodeInspector
 import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
-import org.jetbrains.research.ij.headless.server.inspector.configs.PythonIJCodeInspectorConfig
 
 fun getAdaptedInspections(
     fixture: CodeInsightTestFixture,

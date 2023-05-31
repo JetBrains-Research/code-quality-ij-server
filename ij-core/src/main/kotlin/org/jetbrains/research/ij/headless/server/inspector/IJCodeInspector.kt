@@ -20,7 +20,7 @@ object IJCodeInspector : Inspector {
         else -> object : BaseIJCodeInspectorConfig() {}
     }
 
-    private fun getInspections(language: Language, config: BaseIJCodeInspectorConfig) =
+    fun getInspections(language: Language, config: BaseIJCodeInspectorConfig) =
         language.getAllInspections().filter { it.id !in config.ignoredInspectionIds }.toList()
             .also { logger.info("Found ${it.size} inspections for language $language") }
 
@@ -36,7 +36,7 @@ object IJCodeInspector : Inspector {
         return problems ?: error("Can not get problems")
     }
 
-    private fun inspectSingleAndBuildAdaptedInspection(
+    fun inspectSingleAndBuildAdaptedInspection(
         psiFile: PsiFile,
         inspection: LocalInspectionTool,
         config: BaseIJCodeInspectorConfig
