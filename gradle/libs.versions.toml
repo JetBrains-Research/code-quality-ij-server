@@ -1,7 +1,6 @@
 [versions]
 kotlin = "1.7.21"
 dokka = "1.7.20"
-ktlint = "11.0.0"
 intellij = "1.10.0"
 log4j = "2.19.0"
 kotlin-argparser = "2.0.7"
@@ -36,7 +35,6 @@ plugin-utilities-core = { module = "org.jetbrains.research:plugin-utilities-core
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-gradle-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 jetbrains-intellij = { id = "org.jetbrains.intellij", version.ref = "intellij" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }
 detekt ={ id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
