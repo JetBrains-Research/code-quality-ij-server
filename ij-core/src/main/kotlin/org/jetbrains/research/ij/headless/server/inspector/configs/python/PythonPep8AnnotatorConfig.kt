@@ -18,7 +18,7 @@ object PythonPep8AnnotatorConfig : BaseAnnotatorConfig() {
         "Q000",
         "E301", "E302", "E303", "E304", "E305", // problem with pre-written templates
         "E402", // module level import not at top of file
-        "I100", // Import statements are in the wrong order
+        "I100" // Import statements are in the wrong order
     )
     override val inspectionIdToAdaptedMessages: Map<String, Map<String, AdaptedMessage>> = mapOf()
 
