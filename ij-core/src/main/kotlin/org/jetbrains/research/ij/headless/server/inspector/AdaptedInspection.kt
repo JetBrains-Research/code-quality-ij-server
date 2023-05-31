@@ -10,7 +10,7 @@ data class AdaptedInspection(
     val description: String,
     val lineNumber: Long,
     val offset: Long,
-    val length: Long
+    val length: Long? = null
 ) {
     companion object {
         fun build(

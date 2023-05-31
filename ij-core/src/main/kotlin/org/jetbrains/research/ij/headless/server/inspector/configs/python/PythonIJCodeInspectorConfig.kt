@@ -1,4 +1,7 @@
-package org.jetbrains.research.ij.headless.server.inspector.configs
+package org.jetbrains.research.ij.headless.server.inspector.configs.python
+
+import org.jetbrains.research.ij.headless.server.inspector.configs.AdaptedMessage
+import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
 
 object PythonIJCodeInspectorConfig : BaseIJCodeInspectorConfig() {
     override val ignoredInspectionIds: Set<String> = setOf(

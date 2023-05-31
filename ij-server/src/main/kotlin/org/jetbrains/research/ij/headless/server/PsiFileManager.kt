@@ -23,10 +23,16 @@ class PsiFileManager(private val templatesPath: Path) {
         private val disposable: Disposable
     )
 
-    private val singleFileProjects = mutableMapOf<Language, SingleFileProject>()
+    private val idToLanguage = mutableMapOf<String, Language>()
+    private val singleFileProjects = mutableMapOf<String, SingleFileProject>()
 
-    fun getPsiFile(language: Language, text: String = ""): PsiFile {
-        return singleFileProjects.getOrPut(language) {
+    fun getLanguageById(languageId: String) = idToLanguage.getOrPut(languageId) {
+        Language.findLanguageByID(languageId) ?: error("No such language by id $languageId")
+    }
+
+    fun initSingleFileProject(languageId: String) {
+        singleFileProjects.getOrPut(languageId) {
+            val language = getLanguageById(languageId)
             logger.info("Start to create new psi project for language $language")
 
             val (project, disposable) = createProject(
@@ -44,12 +50,14 @@ class PsiFileManager(private val templatesPath: Path) {
 
             logger.info("New file for language has been successfully created")
             SingleFileProject(language, project, file.get(), disposable)
-        }.file.apply {
-            logger.info("Start to update psi file content...")
-
-            ApplicationManager.getApplication().invokeAndWait {
-                updatePsiFileContent(this, text)
-            }
         }
     }
+
+    fun getPsiFile(language: Language, text: String = "") = singleFileProjects[language.id]?.file?.apply {
+        logger.info("Start to update psi file content...")
+
+        ApplicationManager.getApplication().invokeAndWait {
+            updatePsiFileContent(this, text)
+        }
+    } ?: error("Single file project was not created for language ${language.id}")
 }

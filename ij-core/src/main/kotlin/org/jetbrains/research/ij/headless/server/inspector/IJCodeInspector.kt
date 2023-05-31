@@ -8,10 +8,10 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiFile
 import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
-import org.jetbrains.research.ij.headless.server.inspector.configs.PythonIJCodeInspectorConfig
+import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonIJCodeInspectorConfig
 
 /** @IJCodeInspector provides opportunity to invoke IDE code quality inspections on given file. */
-object IJCodeInspector {
+object IJCodeInspector : Inspector {
 
     private val logger = Logger.getInstance(javaClass)
 
@@ -20,7 +20,7 @@ object IJCodeInspector {
         else -> object : BaseIJCodeInspectorConfig() {}
     }
 
-    fun getInspections(language: Language, config: BaseIJCodeInspectorConfig) =
+    private fun getInspections(language: Language, config: BaseIJCodeInspectorConfig) =
         language.getAllInspections().filter { it.id !in config.ignoredInspectionIds }.toList()
             .also { logger.info("Found ${it.size} inspections for language $language") }
 
@@ -36,7 +36,7 @@ object IJCodeInspector {
         return problems ?: error("Can not get problems")
     }
 
-    fun inspectSingleAndBuildAdaptedInspection(
+    private fun inspectSingleAndBuildAdaptedInspection(
         psiFile: PsiFile,
         inspection: LocalInspectionTool,
         config: BaseIJCodeInspectorConfig
@@ -45,7 +45,7 @@ object IJCodeInspector {
     }
 
     /** Runs language inspections on given code snippet and returns detected problems. */
-    fun inspect(psiFile: PsiFile): List<AdaptedInspection> {
+    override fun inspect(psiFile: PsiFile): List<AdaptedInspection> {
         logger.info("Running code inspections...")
         logger.info(psiFile.text)
         ApplicationManager.getApplication().assertIsDispatchThread()
