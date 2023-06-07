@@ -33,7 +33,7 @@ class CodeServerStarter : ApplicationStarter {
         logger.info("IJ Server config data $config")
 
         logger.info("Starting IJ Code Server on port=${config.port}")
-        val server = CodeServerImpl(config.port, Paths.get(config.templatesPath))
+        val server = CodeServerImpl(config.port, Paths.get(config.templatesPath), config.languages)
         server.start()
         server.blockUntilShutdown()
     }

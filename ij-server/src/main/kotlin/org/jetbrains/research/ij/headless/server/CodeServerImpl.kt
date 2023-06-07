@@ -5,15 +5,20 @@ import io.grpc.Server
 import io.grpc.ServerBuilder
 import java.nio.file.Path
 
-class CodeServerImpl(private val port: Int, templatesPath: Path) {
+class CodeServerImpl(private val port: Int, templatesPath: Path, languages: List<String>) {
+
+    private val psiFileManager = PsiFileManager(templatesPath).also { manager ->
+        languages.forEach { manager.initSingleFileProject(it) }
+    }
 
     private val logger = Logger.getInstance(javaClass)
 
-    private val server: Server = ServerBuilder.forPort(port).addService(CodeInspectionServiceImpl(templatesPath)).build()
+    private val server: Server = ServerBuilder.forPort(port).addService(CodeInspectionServiceImpl(psiFileManager)).build()
 
     fun start() {
         server.start()
         logger.info("Server started, listening on $port")
+
         Runtime.getRuntime().addShutdownHook(
             Thread {
                 logger.info("Shutting down gRPC server since JVM is shutting down")
@@ -23,7 +28,7 @@ class CodeServerImpl(private val port: Int, templatesPath: Path) {
         )
     }
 
-    fun stop() {
+    private fun stop() {
         server.shutdown()
     }
 

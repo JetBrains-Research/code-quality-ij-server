@@ -1,7 +1,6 @@
 package org.jetbrains.research.ij.headless.server.inspector.configs.python
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.jetbrains.research.ij.headless.server.inspector.configs.PythonIJCodeInspectorConfig
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized

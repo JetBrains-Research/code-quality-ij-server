@@ -3,6 +3,7 @@ package org.jetbrains.research.ij.headless.server.inspector.configs
 import com.intellij.lang.Language
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.jetbrains.python.PythonLanguage
+import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonIJCodeInspectorConfig
 import org.jetbrains.research.ij.headless.server.inspector.getAllInspections
 import org.junit.Test
 import org.junit.runner.RunWith

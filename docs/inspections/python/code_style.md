@@ -198,9 +198,7 @@ Default descriptions: `Lowercase variable imported as non-lowercase`, `CamelCase
 
 Reports violations of the PEP 8 coding style guide by running the bundled [pycodestyle.py](https://github.com/PyCQA/pycodestyle) tool.
 
-Use a special config to run the tool.
-
-**TODO: add the final config**
+The full list of ignored inspections can be found in [PythonPep8AnnotatorConfig.kt](../../../ij-core/src/main/kotlin/org/jetbrains/research/ij/headless/server/inspector/configs/python/PythonPep8AnnotatorConfig.kt) file.
 </details>
 
 ### Disabled issues

@@ -5,7 +5,6 @@ version = "1.0-SNAPSHOT"
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.gradle.ktlint)
     alias(libs.plugins.jetbrains.intellij)
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.protobuf) apply false
@@ -24,7 +23,6 @@ allprojects {
     apply {
         plugin(rootProject.libs.plugins.kotlin.jvm.get().pluginId)
         plugin(rootProject.libs.plugins.dokka.get().pluginId)
-        plugin(rootProject.libs.plugins.gradle.ktlint.get().pluginId)
         plugin(rootProject.libs.plugins.jetbrains.intellij.get().pluginId)
     }
 
@@ -46,14 +44,6 @@ allprojects {
         downloadSources.set(platformDownloadSources.toBoolean())
         updateSinceUntilBuild.set(true)
         plugins.set(platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty))
-    }
-
-    ktlint {
-        disabledRules.set(setOf("no-wildcard-imports"))
-        enableExperimentalRules.set(true)
-        filter {
-            exclude("**/resources/**")
-        }
     }
 
     apply<io.gitlab.arturbosch.detekt.DetektPlugin>()
