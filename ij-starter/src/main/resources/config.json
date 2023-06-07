@@ -2,5 +2,6 @@
   "port": 8080,
   "languages": [
     "Python"
-  ]
+  ],
+  "templatesPath": "path/to/templates"
 }

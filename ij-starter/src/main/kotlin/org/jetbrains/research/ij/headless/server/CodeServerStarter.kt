@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.nio.file.Path
 
 class CodeServerStarter : ApplicationStarter {
 
@@ -32,7 +33,7 @@ class CodeServerStarter : ApplicationStarter {
         logger.info("IJ Server config data $config")
 
         logger.info("Starting IJ Code Server on port=${config.port}")
-        val server = CodeServerImpl(config.port, config.languages)
+        val server = CodeServerImpl(config.port, config.languages, Path.of(config.templatesPath).toAbsolutePath())
         server.start()
         server.blockUntilShutdown()
     }

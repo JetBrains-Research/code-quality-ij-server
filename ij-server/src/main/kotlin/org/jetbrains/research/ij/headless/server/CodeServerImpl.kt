@@ -3,12 +3,13 @@ package org.jetbrains.research.ij.headless.server
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import org.slf4j.LoggerFactory
+import java.nio.file.Path
 
-class CodeServerImpl(private val port: Int, languages: List<String>) {
+class CodeServerImpl(private val port: Int, languages: List<String>, templatesDirPath: Path) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val psiFileManager = PsiFileManager().also { manager ->
+    private val psiFileManager = PsiFileManager(templatesDirPath).also { manager ->
         languages.forEach { manager.initSingleFileProject(it) }
     }
 

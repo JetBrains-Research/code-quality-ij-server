@@ -5,30 +5,17 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.intellij.util.io.exists
-import org.jetbrains.research.ij.headless.server.utils.copyDirectory
 import org.jetbrains.research.ij.headless.server.utils.createProject
 import org.jetbrains.research.ij.headless.server.utils.createPsiFile
 import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.io.path.createDirectory
-import kotlin.io.path.createTempDirectory
 
 
-class PsiFileManager {
+class PsiFileManager(private val templatesDirPath: Path?) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    private val templatesDirPath: Path? = this.javaClass.getResource("templates")?.let {
-        return@let try {
-            Path.of(it.toURI())
-        } catch (e: Exception) {
-            logger.info("Failed to get templates dir path", e)
-            null
-        }
-    }
 
     data class SingleFileProject(
         val language: Language,
@@ -44,22 +31,6 @@ class PsiFileManager {
         Language.findLanguageByID(languageId) ?: error("No such language by id $languageId")
     }
 
-    private fun prepareTemplate(language: Language): Path {
-        val projectsPath = createTempDirectory("projects")
-        val languageDirName = language.id.lowercase()
-        val languageProjectPath = projectsPath.resolve(language.id.lowercase()).apply {
-            if (!exists()) {
-                createDirectory()
-            }
-        }
-
-        templatesDirPath?.resolve(languageDirName)?.let {
-            copyDirectory(it, languageProjectPath)
-        }
-
-        return languageProjectPath
-    }
-
     fun initSingleFileProject(languageId: String) {
         singleFileProjects.getOrPut(languageId) {
             val language = getLanguageById(languageId)
@@ -67,7 +38,7 @@ class PsiFileManager {
 
             val (project, disposable) = createProject(
                 language,
-                prepareTemplate(language)
+                templatesDirPath?.resolve(language.id.lowercase()) ?: Path.of(".")
             ) ?: run {
                 logger.error("Can not create project for language $language")
                 error("Can not create project for language $language")
