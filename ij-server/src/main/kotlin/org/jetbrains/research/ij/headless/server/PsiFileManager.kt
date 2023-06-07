@@ -3,18 +3,32 @@ package org.jetbrains.research.ij.headless.server
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.intellij.util.io.exists
+import org.jetbrains.research.ij.headless.server.utils.copyDirectory
 import org.jetbrains.research.ij.headless.server.utils.createProject
 import org.jetbrains.research.ij.headless.server.utils.createPsiFile
 import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
+import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createTempDirectory
 
-class PsiFileManager(private val templatesPath: Path) {
 
-    private val logger = Logger.getInstance(javaClass)
+class PsiFileManager {
+
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    private val templatesDirPath: Path? = this.javaClass.getResource("templates")?.let {
+        return@let try {
+            Path.of(it.toURI())
+        } catch (e: Exception) {
+            logger.info("Failed to get templates dir path", e)
+            null
+        }
+    }
 
     data class SingleFileProject(
         val language: Language,
@@ -37,8 +51,11 @@ class PsiFileManager(private val templatesPath: Path) {
 
             val (project, disposable) = createProject(
                 language,
-                templatesPath.resolve(language.id.uppercase())
-            ) ?: error("Can not create project for language $language")
+                prepareTemplate(language)
+            ) ?: run {
+                logger.error("Can not create project for language $language")
+                error("Can not create project for language $language")
+            }
 
             logger.info("Start to create new for language $language")
 

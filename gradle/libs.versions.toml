@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.7.21"
+kotlin = "1.8.21"
 dokka = "1.7.20"
 intellij = "1.10.0"
 log4j = "2.19.0"

@@ -2,13 +2,12 @@ package org.jetbrains.research.ij.headless.server.inspector
 
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiFile
 import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonPep8AnnotatorConfig
+import org.slf4j.LoggerFactory
 
 object AnnotatorInspector : Inspector {
-    private val logger = Logger.getInstance(javaClass)
-
+    private val logger = LoggerFactory.getLogger(javaClass)
     private fun getAnnotatorConfigs(language: Language) = when (language.id) {
         "Python" -> listOf(PythonPep8AnnotatorConfig)
         else -> emptyList()

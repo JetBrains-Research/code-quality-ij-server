@@ -1,19 +1,19 @@
 package org.jetbrains.research.ij.headless.server
 
-import com.intellij.openapi.diagnostic.Logger
 import io.grpc.Server
 import io.grpc.ServerBuilder
-import java.nio.file.Path
+import org.slf4j.LoggerFactory
 
-class CodeServerImpl(private val port: Int, templatesPath: Path, languages: List<String>) {
+class CodeServerImpl(private val port: Int, languages: List<String>) {
 
-    private val psiFileManager = PsiFileManager(templatesPath).also { manager ->
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    private val psiFileManager = PsiFileManager().also { manager ->
         languages.forEach { manager.initSingleFileProject(it) }
     }
 
-    private val logger = Logger.getInstance(javaClass)
-
-    private val server: Server = ServerBuilder.forPort(port).addService(CodeInspectionServiceImpl(psiFileManager)).build()
+    private val server: Server =
+        ServerBuilder.forPort(port).addService(CodeInspectionServiceImpl(psiFileManager)).build()
 
     fun start() {
         server.start()
