@@ -44,6 +44,22 @@ class PsiFileManager {
         Language.findLanguageByID(languageId) ?: error("No such language by id $languageId")
     }
 
+    private fun prepareTemplate(language: Language): Path {
+        val projectsPath = createTempDirectory("projects")
+        val languageDirName = language.id.lowercase()
+        val languageProjectPath = projectsPath.resolve(language.id.lowercase()).apply {
+            if (!exists()) {
+                createDirectory()
+            }
+        }
+
+        templatesDirPath?.resolve(languageDirName)?.let {
+            copyDirectory(it, languageProjectPath)
+        }
+
+        return languageProjectPath
+    }
+
     fun initSingleFileProject(languageId: String) {
         singleFileProjects.getOrPut(languageId) {
             val language = getLanguageById(languageId)
