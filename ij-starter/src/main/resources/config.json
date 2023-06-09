@@ -1,7 +1,7 @@
 {
   "port": 8080,
+  "templatesPath": "path/to/templates",
   "languages": [
     "Python"
-  ],
-  "templatesPath": "path/to/templates"
+  ]
 }

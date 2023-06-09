@@ -24,5 +24,5 @@ fun createProject(language: Language, projectTemplatesDir: Path = Path.of(".")):
     val projectOpener = getProjectOpener(language)
     val disposable = Disposer.newDisposable()
 
-    return projectOpener.open(projectTemplatesDir, disposable, false)?.let { it to disposable }
+    return projectOpener.open(projectTemplatesDir, disposable, true)?.let { it to disposable }
 }
