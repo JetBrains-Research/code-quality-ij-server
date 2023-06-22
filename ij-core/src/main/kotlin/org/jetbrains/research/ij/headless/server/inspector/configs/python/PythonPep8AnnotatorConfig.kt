@@ -18,9 +18,11 @@ object PythonPep8AnnotatorConfig : BaseAnnotatorConfig() {
         "Q000",
         "E301", "E302", "E303", "E304", "E305", // problem with pre-written templates
         "E402", // module level import not at top of file
-        "I100" // Import statements are in the wrong order
+        "I100", // Import statements are in the wrong order
+        "E711", // Duplicate of PyComparisonWithNoneInspection
+        "E117", // over-indented, conflicts with E111
+        "E712" // Duplicate of PySimplifyBooleanCheckInspection
     )
-    override val inspectionIdToAdaptedMessages: Map<String, Map<String, AdaptedMessage>> = mapOf()
 
     override val annotator = Pep8ExternalAnnotator()
     override val annotatorName = "PEP-8"
