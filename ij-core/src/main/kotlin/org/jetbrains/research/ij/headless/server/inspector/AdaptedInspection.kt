@@ -24,7 +24,7 @@ data class AdaptedInspection(
                 inspection,
                 getMessage(descriptor, message)
             ),
-            lineNumber = descriptor.lineNumber.toLong(),
+            lineNumber = descriptor.lineNumber.toLong() + 1,
             offset = descriptor.psiElement?.textOffset?.toLong() ?: -1L,
             length = descriptor.psiElement?.textLength?.toLong() ?: -1L
         )
