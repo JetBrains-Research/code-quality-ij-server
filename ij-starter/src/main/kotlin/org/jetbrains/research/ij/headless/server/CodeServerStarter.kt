@@ -12,6 +12,7 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFact
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Path
+import kotlin.system.exitProcess
 
 
 class CodeServerStarter : ApplicationStarter {
@@ -46,11 +47,20 @@ class CodeServerStarter : ApplicationStarter {
         configureLogger(loggingLevel, logsPath)
 
         logger.info("Parsing IJ Server config from file $configPath")
-        val config = Json.decodeFromStream<CodeServerConfig>(File(configPath).inputStream())
+
+        val config = try {
+            // For some reason if this line throws an exception it would be swallowed by ApplicationStarter ...
+            Json.decodeFromStream<CodeServerConfig>(File(configPath).inputStream())
+        } catch (e: Exception) {
+            // ... so we catch all exceptions, log them and exit.
+            logger.error(e.message)
+            exitProcess(1)
+        }
+
         logger.info("IJ Server config data $config")
 
         logger.info("Starting IJ Code Server on port=${config.port}")
-        val server = CodeServerImpl(config.port, config.languages, Path.of(config.templatesPath).toAbsolutePath())
+        val server = CodeServerImpl(config.port, config.language, Path.of(config.templatesPath).toAbsolutePath())
         server.start()
         server.blockUntilShutdown()
     }

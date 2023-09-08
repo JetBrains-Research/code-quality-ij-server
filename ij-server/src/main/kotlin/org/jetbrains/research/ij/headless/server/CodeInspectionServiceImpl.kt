@@ -12,12 +12,9 @@ class CodeInspectionServiceImpl(private val psiFileManager: PsiFileManager) :
     private val logger = LoggerFactory.getLogger(javaClass)
     override suspend fun inspect(request: Code): InspectionResult {
         logger.info("Receive request: $request")
-
-        val language = psiFileManager.getLanguageById(request.languageId.name)
-        val file = psiFileManager.getPsiFile(language, request.text)
+        val file = psiFileManager.getPsiFile(request.text)
 
         val response = AtomicReference<InspectionResult>()
-
         ApplicationManager.getApplication().invokeAndWait {
             val inspections = IJCodeInspector.inspect(file) + AnnotatorInspector.inspect(file)
             response.set(

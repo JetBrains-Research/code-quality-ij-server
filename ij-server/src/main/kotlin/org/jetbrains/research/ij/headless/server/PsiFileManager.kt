@@ -5,6 +5,9 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.research.ij.headless.server.utils.createProject
 import org.jetbrains.research.ij.headless.server.utils.createPsiFile
 import org.jetbrains.research.ij.headless.server.utils.updatePsiFileContent
@@ -13,7 +16,7 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
 
-class PsiFileManager(private val templatesDirPath: Path?) {
+class PsiFileManager(private val templatesDirPath: Path?, private val language: Language) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -24,44 +27,47 @@ class PsiFileManager(private val templatesDirPath: Path?) {
         private val disposable: Disposable
     )
 
-    private val idToLanguage = mutableMapOf<String, Language>()
-    private val singleFileProjects = mutableMapOf<String, SingleFileProject>()
+    private val singleFileProject = run {
+        logger.info("Start to create new psi project for language \"${language.id}\"")
 
-    fun getLanguageById(languageId: String) = idToLanguage.getOrPut(languageId) {
-        Language.findLanguageByID(languageId) ?: error("No such language by id $languageId")
-    }
+        val (project, disposable) = createProject(
+            language,
+            templatesDirPath?.resolve(language.id.lowercase()) ?: Path.of(".")
+        ) ?: run {
+            logger.error("Can not create project for language \"${language.id}\"")
+            error("Can not create project for language \"${language.id}\"")
+        }
 
-    fun initSingleFileProject(languageId: String) {
-        singleFileProjects.getOrPut(languageId) {
-            val language = getLanguageById(languageId)
-            logger.info("Start to create new psi project for language $language")
+        logger.info("Start to create new file for language \"${language.id}\"")
 
-            val (project, disposable) = createProject(
-                language,
-                templatesDirPath?.resolve(language.id.lowercase()) ?: Path.of(".")
-            ) ?: run {
-                logger.error("Can not create project for language $language")
-                error("Can not create project for language $language")
-            }
+        val file = AtomicReference<PsiFile>()
 
-            logger.info("Start to create new for language $language")
-
-            val file = AtomicReference<PsiFile>()
-            ApplicationManager.getApplication().invokeAndWait {
+        when (language.id) {
+            LanguageId.Python.name -> ApplicationManager.getApplication().invokeAndWait {
                 val psiFile = createPsiFile(project, "${language.id}_dummy", language, "")
                 file.set(psiFile)
             }
 
-            logger.info("New file for language has been successfully created")
-            SingleFileProject(language, project, file.get(), disposable)
+            LanguageId.kotlin.name -> ApplicationManager.getApplication().invokeAndWait {
+                val scope = GlobalSearchScope.allScope(project)
+                val psiManager = PsiManager.getInstance(project)
+
+                val mainVirtualFile = FilenameIndex.getVirtualFilesByName("Main.kt", scope).first()
+                file.set(psiManager.findFile(mainVirtualFile))
+            }
+
+            else -> {
+                logger.error("Can not create single file project for language \"${language.id}\"")
+                error("Can not create project for language \"${language.id}\"")
+            }
         }
+
+        logger.info("New file for language has been successfully created")
+        SingleFileProject(language, project, file.get(), disposable)
     }
 
-    fun getPsiFile(language: Language, text: String = "") = singleFileProjects[language.id]?.file?.apply {
+    fun getPsiFile(text: String = "") = singleFileProject.file.apply {
         logger.info("Start to update psi file content...")
-
-        ApplicationManager.getApplication().invokeAndWait {
-            updatePsiFileContent(this, text)
-        }
-    } ?: error("Single file project was not created for language ${language.id}")
+        ApplicationManager.getApplication().invokeAndWait { updatePsiFileContent(this, text) }
+    }
 }
