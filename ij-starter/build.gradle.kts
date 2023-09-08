@@ -15,12 +15,16 @@ tasks {
     runIde {
         // Server config
         val config: String? by project
+        val loggingLevel: String? by project
+        val logsPath: String? by project
 
         args = listOfNotNull(
             // Define your application starter command name
             "ij-code-server",
             // Define args for your application
-            config?.let { "--config=$it" }
+            config?.let { "--config=$it" },
+            loggingLevel?.let { "--loggingLevel=$it" },
+            logsPath?.let { "--logsPath=${it}" },
         )
 
         jvmArgs = listOf(

@@ -46,7 +46,7 @@ object IJCodeInspector : Inspector {
     /** Runs language inspections on given code snippet and returns detected problems. */
     override fun inspect(psiFile: PsiFile): List<AdaptedInspection> {
         logger.info("Running code inspections...")
-        logger.info(psiFile.text)
+        logger.debug(psiFile.text)
         ApplicationManager.getApplication().assertIsDispatchThread()
         val config = getIJCodeInspectorConfig(psiFile.language)
         return getInspections(psiFile.language, config).map { inspection ->

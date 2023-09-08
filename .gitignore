@@ -5,10 +5,8 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/*
+!.idea/runConfigurations
 *.iws
 *.iml
 *.ipr
@@ -40,3 +38,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### The templates folder ###
+templates/python/venv
+
+### The scripts folder ###
+scripts/model_pb2*
+scripts/venv
