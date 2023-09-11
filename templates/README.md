@@ -29,4 +29,4 @@ The supported languages are listed below:
    ```
 
 ## Kotlin project template
-WIP
+No additional setup is required.
