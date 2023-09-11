@@ -25,6 +25,7 @@ class CodeServerStarter : ApplicationStarter {
     /** Sets main (start) thread for IDE in headless as not edt. */
     override val requiredModality: Int = ApplicationStarter.NOT_IN_EDT
 
+    @Suppress("TooGenericExceptionCaught")
     @OptIn(ExperimentalSerializationApi::class)
     override fun main(args: List<String>) {
         val parser = ArgParser(args.drop(1).toTypedArray())
