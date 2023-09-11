@@ -3,5 +3,4 @@ version = "1.0-SNAPSHOT"
 
 dependencies {
     implementation(rootProject.libs.plugin.utilities.core)
-    implementation(project(":ij-model"))
 }

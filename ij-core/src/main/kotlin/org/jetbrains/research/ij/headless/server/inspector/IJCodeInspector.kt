@@ -6,7 +6,6 @@ import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiFile
-import org.jetbrains.research.ij.headless.server.LanguageId
 import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
 import org.jetbrains.research.ij.headless.server.inspector.configs.kotlin.KotlinIJCodeInspectorConfig
 import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonIJCodeInspectorConfig
@@ -17,8 +16,8 @@ object IJCodeInspector : Inspector {
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private fun getIJCodeInspectorConfig(language: Language) = when (language.id) {
-        LanguageId.Python.name -> PythonIJCodeInspectorConfig
-        LanguageId.kotlin.name -> KotlinIJCodeInspectorConfig
+        "Python" -> PythonIJCodeInspectorConfig
+        "kotlin" -> KotlinIJCodeInspectorConfig
         else -> object : BaseIJCodeInspectorConfig() {}
     }
 
