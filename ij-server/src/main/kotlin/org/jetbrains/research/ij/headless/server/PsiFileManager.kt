@@ -28,17 +28,17 @@ class PsiFileManager(private val templatesDirPath: Path?, private val language: 
     )
 
     private val singleFileProject = run {
-        logger.info("Start to create new psi project for language \"${language.id}\"")
+        logger.info("Start to create a new project for language \"${language.id}\"")
 
         val (project, disposable) = createProject(
             language,
             templatesDirPath?.resolve(language.id.lowercase()) ?: Path.of(".")
         ) ?: run {
-            logger.error("Can not create project for language \"${language.id}\"")
-            error("Can not create project for language \"${language.id}\"")
+            logger.error("Can not create a project for language \"${language.id}\"")
+            error("Can not create a project for language \"${language.id}\"")
         }
 
-        logger.info("Start to create new file for language \"${language.id}\"")
+        logger.info("Start to create a new file for language \"${language.id}\"")
 
         val file = AtomicReference<PsiFile>()
 
@@ -57,8 +57,8 @@ class PsiFileManager(private val templatesDirPath: Path?, private val language: 
             }
 
             else -> {
-                logger.error("Can not create single file project for language \"${language.id}\"")
-                error("Can not create project for language \"${language.id}\"")
+                logger.error("Can not create a file for language \"${language.id}\"")
+                error("Can not create a file for language \"${language.id}\"")
             }
         }
 
