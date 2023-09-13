@@ -27,7 +27,9 @@ that finds a file and returns a list of inspections that were found.
 Run `./gradlew :ij-starter:runIde -Pconfig=path/to/config/file` command from the root of the project.
 
 The config file must be a JSON file with several fields (see [CodeServerConfig.kt](./ij-starter/src/main/kotlin/org/jetbrains/research/ij/headless/server/CodeServerConfig.kt) file). 
-An example of the config file can be found [here](./ij-starter/src/main/resources/config.json).
+An example of the config file can be found [here](./ij-starter/src/main/resources/config.json). Possible options for language are listed below:
+- `kotlin` for Kotlin
+- `Python` for Python
 
 You could also specify several optional arguments:
 
