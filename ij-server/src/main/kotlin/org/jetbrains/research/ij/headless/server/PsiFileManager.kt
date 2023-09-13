@@ -52,7 +52,11 @@ class PsiFileManager(private val templatesDirPath: Path?, private val language: 
                 val scope = GlobalSearchScope.allScope(project)
                 val psiManager = PsiManager.getInstance(project)
 
-                val mainVirtualFile = FilenameIndex.getVirtualFilesByName("Main.kt", scope).first()
+                val mainVirtualFile = FilenameIndex.getVirtualFilesByName("Main.kt", scope).firstOrNull() ?: run {
+                    logger.error("Can not find the Main.kt file in a template project.")
+                    error("Can not find the Main.kt file in a template project.")
+                }
+
                 file.set(psiManager.findFile(mainVirtualFile))
             }
 
