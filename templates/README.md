@@ -28,7 +28,8 @@ The supported languages are listed below:
    pip install -r requirements.txt
    ```
 
-> [!NOTE]: **custom template**
+> [!NOTE]
+> **custom template**
 > 
 > You could also use your own template project:
 > - It must be a correct Python project that PyCharm could open.
@@ -38,7 +39,8 @@ The supported languages are listed below:
 ## Kotlin project template
 No additional setup is required.
 
-> [!NOTE]: **custom template**
+> [!NOTE]
+> **custom template**
 >
 > You could also use your own template project:
 > - It must be a correct Kotlin project that IntelliJ could open.
