@@ -41,6 +41,7 @@ You could also specify several optional arguments:
 This repository already contains predefined [template projects](./templates) for different language. 
 To run inspections correctly, you should additionally set up templates. 
 Instructions on how to do it you could find in the [corresponding README file](./templates/README.md).
+In this file you could also find notes about requirements for your own custom template projects.
 
 ### Run the server in a docker image
 
