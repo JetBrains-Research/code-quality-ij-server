@@ -25,11 +25,10 @@ object SingleFileProjectConfigurator {
         val file = AtomicReference<PsiFile>()
 
         ApplicationManager.getApplication().invokeAndWait {
-            val mainPsiFile =
-                MainFile.valueOfOrNull(language.id)?.let { findPsiFileByName(project, it.fileName) } ?: run {
-                    logger.error("Can not create a file for language \"${language.id}\"")
-                    error("Can not create a file for language \"${language.id}\"")
-                }
+            val mainPsiFile = MainFile.fromLanguage(language)?.let { findPsiFileByName(project, it.fileName) } ?: run {
+                logger.error("Can not create a file for language \"${language.id}\"")
+                error("Can not create a file for language \"${language.id}\"")
+            }
 
             file.set(mainPsiFile)
         }
@@ -38,20 +37,12 @@ object SingleFileProjectConfigurator {
         return SingleFileProject(language, project, file.get(), disposable)
     }
 
-    @Suppress("EnumNaming")  // Suppressing it because enum keys are consistent with language IDs from API.
-    enum class MainFile(val fileName: String) {
-        kotlin("Main.kt"),
-        Python("main.py");
+    enum class MainFile(val languageId: String, val fileName: String) {
+        KotlinMainFile(LanguageId.kotlin.name, "Main.kt"),
+        PythonMainFile(LanguageId.Python.name, "main.py");
 
         companion object {
-            fun valueOfOrNull(value: String): MainFile? {
-                @Suppress("SwallowedException")
-                return try {
-                    MainFile.valueOf(value)
-                } catch (e: IllegalArgumentException) {
-                    null
-                }
-            }
+            fun fromLanguage(language: Language) = MainFile.values().associateBy(MainFile::languageId)[language.id]
         }
     }
 }
