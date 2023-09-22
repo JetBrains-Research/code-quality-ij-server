@@ -38,12 +38,14 @@ object SingleFileProjectConfigurator {
         return SingleFileProject(language, project, file.get(), disposable)
     }
 
+    @Suppress("EnumNaming")  // Suppressing it because enum keys are consistent with language IDs from API.
     enum class MainFile(val fileName: String) {
         kotlin("Main.kt"),
         Python("main.py");
 
         companion object {
             fun valueOfOrNull(value: String): MainFile? {
+                @Suppress("SwallowedException")
                 return try {
                     MainFile.valueOf(value)
                 } catch (e: IllegalArgumentException) {
