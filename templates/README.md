@@ -31,7 +31,8 @@ The supported languages are listed below:
 > **Note**
 > 
 > You could also use your own template project:
-> - It must be a correct Python project that PyCharm could open.
+> - It must be a correct Python project that PyCharm could open 
+>   (you could find the PyCharm API version in [gradle.properties](../gradle.properties)).
 > - It must have the `main.py` file to which the code sent for analysis will be saved.
 > - It must have a virtual environment folder in the root of the template with the name `venv`.
 
@@ -42,4 +43,5 @@ No additional setup is required.
 >
 > You could also use your own template project:
 > - It must be a correct Kotlin project that IntelliJ could open.
+>   (you could find the IJ API version in [gradle.properties](../gradle.properties)).
 > - It must have the `Main.kt` file to which the code sent for analysis will be saved.

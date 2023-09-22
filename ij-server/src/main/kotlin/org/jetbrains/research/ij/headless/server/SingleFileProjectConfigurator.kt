@@ -25,19 +25,31 @@ object SingleFileProjectConfigurator {
         val file = AtomicReference<PsiFile>()
 
         ApplicationManager.getApplication().invokeAndWait {
-            val mainPsiFile = when (language.id) {
-                LanguageId.Python.name -> findPsiFileByName(project, "main.py")
-                LanguageId.kotlin.name -> findPsiFileByName(project, "Main.kt")
-                else -> {
+            val mainPsiFile =
+                MainFile.valueOfOrNull(language.id)?.let { findPsiFileByName(project, it.fileName) } ?: run {
                     logger.error("Can not create a file for language \"${language.id}\"")
                     error("Can not create a file for language \"${language.id}\"")
                 }
-            }
 
             file.set(mainPsiFile)
         }
 
         logger.info("New file for language has been successfully created")
         return SingleFileProject(language, project, file.get(), disposable)
+    }
+
+    enum class MainFile(val fileName: String) {
+        kotlin("Main.kt"),
+        Python("main.py");
+
+        companion object {
+            fun valueOfOrNull(value: String): MainFile? {
+                return try {
+                    MainFile.valueOf(value)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            }
+        }
     }
 }
