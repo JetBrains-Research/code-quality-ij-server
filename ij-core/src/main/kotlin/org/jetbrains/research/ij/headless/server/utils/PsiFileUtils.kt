@@ -26,10 +26,11 @@ fun createPsiFile(project: Project, fileName: String, language: Language, text: 
 
 fun findPsiFileByName(project: Project, fileName: String): PsiFile {
     val scope = GlobalSearchScope.allScope(project)
-    
+
     val mainVirtualFile = FilenameIndex.getVirtualFilesByName(fileName, scope).firstOrNull() ?: run {
         error("Can not find the $fileName file in the ${project.name} project")
     }
 
-    return mainVirtualFile.toPsiFile(project)!!
+    return mainVirtualFile.toPsiFile(project)
+        ?: error("Can not convert the virtual file $mainVirtualFile to a PSI file")
 }
