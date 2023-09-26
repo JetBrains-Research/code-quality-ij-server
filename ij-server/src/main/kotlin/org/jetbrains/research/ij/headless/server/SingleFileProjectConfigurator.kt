@@ -38,11 +38,13 @@ object SingleFileProjectConfigurator {
     }
 
     enum class MainFile(val languageId: String, val fileName: String) {
-        KotlinMainFile(LanguageId.kotlin.name, "Main.kt"),
-        PythonMainFile(LanguageId.Python.name, "main.py");
+        KotlinFile(LanguageId.kotlin.name, "Main.kt"),
+        PythonFile(LanguageId.Python.name, "main.py");
 
         companion object {
-            fun fromLanguage(language: Language) = MainFile.values().associateBy(MainFile::languageId)[language.id]
+            private val fileByLanguage = MainFile.values().associateBy(MainFile::languageId)
+
+            fun fromLanguage(language: Language) = fileByLanguage[language.id]
         }
     }
 }
