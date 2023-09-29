@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiFile
 import org.jetbrains.research.ij.headless.server.inspector.configs.BaseIJCodeInspectorConfig
+import org.jetbrains.research.ij.headless.server.inspector.configs.kotlin.KotlinIJCodeInspectorConfig
 import org.jetbrains.research.ij.headless.server.inspector.configs.python.PythonIJCodeInspectorConfig
 import org.slf4j.LoggerFactory
 
@@ -16,6 +17,7 @@ object IJCodeInspector : Inspector {
     private val logger = LoggerFactory.getLogger(javaClass)
     private fun getIJCodeInspectorConfig(language: Language) = when (language.id) {
         "Python" -> PythonIJCodeInspectorConfig
+        "kotlin" -> KotlinIJCodeInspectorConfig
         else -> object : BaseIJCodeInspectorConfig() {}
     }
 
@@ -46,7 +48,7 @@ object IJCodeInspector : Inspector {
     /** Runs language inspections on given code snippet and returns detected problems. */
     override fun inspect(psiFile: PsiFile): List<AdaptedInspection> {
         logger.info("Running code inspections...")
-        logger.info(psiFile.text)
+        logger.debug(psiFile.text)
         ApplicationManager.getApplication().assertIsDispatchThread()
         val config = getIJCodeInspectorConfig(psiFile.language)
         return getInspections(psiFile.language, config).map { inspection ->

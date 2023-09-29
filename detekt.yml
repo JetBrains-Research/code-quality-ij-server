@@ -18,6 +18,8 @@ style:
     active: true
   FunctionOnlyReturningConstant:
     active: true
+  ForbiddenComment:
+    active: false
 
 complexity:
   TooManyFunctions:

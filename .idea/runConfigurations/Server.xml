@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="code-quality-ij-server:ij-starter [runIde]" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Server" type="GradleRunConfiguration" factoryName="Gradle">
     <log_file alias="idea.log" path="$PROJECT_DIR$/ij-starter/build/idea-sandbox/system/log/idea.log" />
     <ExternalSystemSettings>
       <option name="executionName" />

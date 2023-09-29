@@ -15,7 +15,7 @@ object AnnotatorInspector : Inspector {
 
     override fun inspect(psiFile: PsiFile): List<AdaptedInspection> {
         logger.info("Running code inspections...")
-        logger.info(psiFile.text)
+        logger.debug(psiFile.text)
         ApplicationManager.getApplication().assertIsDispatchThread()
         return getAnnotatorConfigs(psiFile.language).map { config ->
             val information = config.annotator.collectInformation(psiFile)
