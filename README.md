@@ -1,3 +1,7 @@
+# Status: Archived 
+
+No longer maintained
+
 # IntelliJ Code Server
 
 IntelliJ Code Server is an example project how [IntelliJ platform](https://www.jetbrains.com/opensource/idea/) can be used as a server
